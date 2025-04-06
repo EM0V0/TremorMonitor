@@ -9,11 +9,11 @@ namespace NeuroMotion
     public  class MQTTClient
     {
         private IMqttClient _client;
-        private string _brokerIp;
+        private string _raspberryIP;
 
-        public MQTTClient(string brokerIp)
+        public MQTTClient(string raspberryIP)
         {
-            _brokerIp = brokerIp;
+            _raspberryIP = raspberryIP;
         }
 
         public async Task ConnectAndSubscribeAsync()
@@ -22,7 +22,7 @@ namespace NeuroMotion
             _client = factory.CreateMqttClient();
 
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(_brokerIp)
+                .WithTcpServer(_raspberryIP)
                 .Build();
 
             _client.ConnectedAsync += async e =>
