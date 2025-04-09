@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "bSuDhr2xK9s=",
+  "success": true,
+  "projectFilePath": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dibya\\.nuget\\packages\\mqttnet\\4.2.1.781\\mqttnet.4.2.1.781.nupkg.sha512"
+  ],
+  "logs": []
+}
