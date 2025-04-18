@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
+      "Id": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\js\\chart-helper.js",
+      "PackagePath": "staticwebassets\\js\\chart-helper.js"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.NeuroMotionDemo.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },

@@ -1,0 +1,71 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using NeuroMotionDemo.Models
+
+<RadzenChart style="height: 300px;">
+    <RadzenLegend Position="LegendPosition.Bottom" />
+
+    @if (VisibleSeries.Any())
+    {
+        @foreach (var series in VisibleSeries)
+        {
+            <RadzenLineSeries Data="@series.Value"
+                              CategoryProperty="Timestamp"
+                              ValueProperty="Value"
+                              Title="@GetSeriesTitle(series.Key)"
+                              Smooth="false"
+                              StrokeWidth="2">
+                <RadzenMarkers MarkerType="MarkerType.Circle" Size="4" />
+                <RadzenSeriesDataLabels Visible="false" />
+            </RadzenLineSeries>
+        }
+
+        <RadzenCategoryAxis Padding="20" Formatter="@FormatTimestamp" />
+        <RadzenValueAxis>
+            <RadzenGridLines Visible="true" />
+            <RadzenAxisTitle Text="Value" />
+        </RadzenValueAxis>
+    }
+    else
+    {
+        <div style="padding: 20px; text-align: center;">No data available.</div>
+    }
+</RadzenChart>
+
+@code {
+    [Parameter]
+    public Dictionary<string, List<TrendDataPoint>> VisibleSeries { get; set; } = new();
+
+    // This is crucial - it tells the component to re-render when VisibleSeries changes
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        // Check if VisibleSeries has changed
+        if (parameters.TryGetValue<Dictionary<string, List<TrendDataPoint>>>(
+            nameof(VisibleSeries), out var newSeries) &&
+            !ReferenceEquals(newSeries, VisibleSeries))
+        {
+            Console.WriteLine("Chart data changed - refreshing");
+        }
+
+        return base.SetParametersAsync(parameters);
+    }
+
+    private string GetSeriesTitle(string key)
+    {
+        var parts = key.Split('_');
+        if (parts.Length >= 2)
+        {
+            return $"{parts[0]} {parts[1]}";
+        }
+        return key;
+    }
+
+    private string FormatTimestamp(object value)
+    {
+        if (value is DateTime dateTime)
+        {
+            return dateTime.ToString("HH:mm:ss");
+        }
+        return string.Empty;
+    }
+}

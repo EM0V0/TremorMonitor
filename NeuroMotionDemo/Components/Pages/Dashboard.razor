@@ -1,11 +1,13 @@
 ﻿@page "/dashboard"
 @rendermode InteractiveServer
 @using System.Text.Json
-@inject Services.DashboardStateService StateService
-@inject Services.MqttService MqttService
+@using NeuroMotionDemo.Services
+@inject DashboardStateService StateService
+@inject MqttService MqttService
+@inject TrendDataService TrendDataService
 @implements IDisposable
 
-<PageTitle>  Dashboard Demo</PageTitle>
+<PageTitle>NeuroMotion Dashboard</PageTitle>
 
 <h1>Parkinson's Tremor Monitoring</h1>
 
@@ -20,12 +22,21 @@
     </div>
 </div>
 
+<div class="row mb-3">
+    <div class="col-12">
+        <a href="/trends" class="btn btn-success">
+            <i class="oi oi-graph"></i> View Trend Graphs
+        </a>
+    </div>
+</div>
+
 <!-- Debug panel -->
 <div class="debug-panel">
     <h4>Debug Information</h4>
     <p>Connection status: @(_isConnected ? "Connected" : "Not Connected")</p>
     <p>Sensors in StateService: @(StateService.SensorData?.Count ?? 0)</p>
     <p>Last message received: @(_lastMessageTime)</p>
+    <button class="btn btn-secondary" @onclick="ConnectToMqtt">Reconnect</button>
 </div>
 
 <!-- Raw data display for troubleshooting -->
@@ -121,15 +132,24 @@ else
 }
 
 @code {
-    private string BrokerIp { get; set; } = "10.0.0.91";
+    private string BrokerIp { get; set; } = "10.0.0.91"; // Your Pi's IP
     private bool _isConnected = false;
     private string _lastMessageTime = "None";
     private string _rawJsonData = "No data received";
+    private System.Threading.Timer? _reconnectTimer;
 
     protected override void OnInitialized()
     {
         Console.WriteLine("Dashboard initialized");
         StateService.OnDataUpdate += OnDataUpdate;
+
+        // Check if MqttService is already connected but UI doesn't reflect it
+        if (MqttService.IsConnected)
+        {
+            _isConnected = true;
+            MqttService.DataReceived += OnDataReceived; // Re-attach event handler
+            Console.WriteLine("Reconnected to existing MQTT session");
+        }
     }
 
     private async Task ConnectToMqtt()
@@ -137,26 +157,37 @@ else
         Console.WriteLine($"Attempting to connect to broker at {BrokerIp}");
         try
         {
+            // Unsubscribe first to prevent duplicate handlers
+            MqttService.DataReceived -= OnDataReceived;
+
             await MqttService.ConnectAsync(BrokerIp);
             MqttService.DataReceived += OnDataReceived;
             _isConnected = true;
             Console.WriteLine("Connected successfully");
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to connect: {ex.Message}");
             _isConnected = false;
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
-    private void OnDataReceived(object? sender, Services.SensorDataEventArgs e)
+    private void OnDataReceived(object? sender, SensorDataEventArgs e)
     {
         _lastMessageTime = DateTime.Now.ToString("HH:mm:ss");
         _rawJsonData = JsonSerializer.Serialize(e.Data, new JsonSerializerOptions { WriteIndented = true });
         Console.WriteLine($"Data received from topic: {e.Topic}");
+
+        // Extract sensor name from topic
+        var sensorName = e.Topic.Split('/').LastOrDefault() ?? "unknown";
+
+        // Update dashboard state
         StateService.UpdateSensorData(e.Topic, e.Data);
+
+        // Also update trend data
+        TrendDataService.ProcessMqttData(e.Data, sensorName);
     }
 
     private async void OnDataUpdate()
@@ -240,5 +271,6 @@ else
     {
         StateService.OnDataUpdate -= OnDataUpdate;
         MqttService.DataReceived -= OnDataReceived;
+        _reconnectTimer?.Dispose();
     }
 }

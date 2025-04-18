@@ -1,5 +1,7 @@
 using NeuroMotionDemo.Components;
 using NeuroMotionDemo.Services;
+using NeuroMotionDemo.Models;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,14 @@ builder.Services.AddRazorComponents()
 // Register our custom services
 builder.Services.AddSingleton<DashboardStateService>();
 builder.Services.AddSingleton<MqttService>();
+builder.Services.AddSingleton<TrendDataService>();
+
+// Add Radzen services
+builder.Services.AddRadzenComponents();
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 
 var app = builder.Build();
 

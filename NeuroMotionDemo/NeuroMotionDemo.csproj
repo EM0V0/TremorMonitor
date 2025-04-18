@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="MQTTnet" Version="4.2.1.781" />
+    <PackageReference Include="Radzen.Blazor" Version="6.5.1" />
   </ItemGroup>
 
 </Project>

@@ -36,17 +36,17 @@
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"rzpvtqn4ji"},{"Name":"integrity","Value":"sha256-V\u002BpwHhoUyMQQri47P7Gf4hE2XvTY\u002BzhoMy50OfnQIb8="},{"Name":"label","Value":"_content/NeuroMotionDemo/css/bootstrap.min.css"}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"225750"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022V\u002BpwHhoUyMQQri47P7Gf4hE2XvTY\u002BzhoMy50OfnQIb8=\u0022"},{"Name":"Last-Modified","Value":"Wed, 09 Apr 2025 13:51:45 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/css/site.4589tup0e1.css">
+    <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/css/site.7phwx827a1.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"4589tup0e1"},{"Name":"integrity","Value":"sha256-iGmIAdDXiuS6XGNF4aU2rkV4dY51C6l72Lmt1My09Pw="},{"Name":"label","Value":"_content/NeuroMotionDemo/css/site.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1389"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022iGmIAdDXiuS6XGNF4aU2rkV4dY51C6l72Lmt1My09Pw=\u0022"},{"Name":"Last-Modified","Value":"Wed, 09 Apr 2025 13:41:33 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"7phwx827a1"},{"Name":"integrity","Value":"sha256-m\u002BJpKbJ2hiJ1Vp0ISGFh3KgULhP2ud1uHfib7B/NmyA="},{"Name":"label","Value":"_content/NeuroMotionDemo/css/site.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"4118"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022m\u002BJpKbJ2hiJ1Vp0ISGFh3KgULhP2ud1uHfib7B/NmyA=\u0022"},{"Name":"Last-Modified","Value":"Thu, 10 Apr 2025 06:10:13 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/css/site.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-iGmIAdDXiuS6XGNF4aU2rkV4dY51C6l72Lmt1My09Pw="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1389"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022iGmIAdDXiuS6XGNF4aU2rkV4dY51C6l72Lmt1My09Pw=\u0022"},{"Name":"Last-Modified","Value":"Wed, 09 Apr 2025 13:41:33 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-m\u002BJpKbJ2hiJ1Vp0ISGFh3KgULhP2ud1uHfib7B/NmyA="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"4118"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022m\u002BJpKbJ2hiJ1Vp0ISGFh3KgULhP2ud1uHfib7B/NmyA=\u0022"},{"Name":"Last-Modified","Value":"Thu, 10 Apr 2025 06:10:13 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/favicon.ifv42okdf2.png">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.png'))</AssetFile>
@@ -59,6 +59,18 @@
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"1148"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u00224mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg=\u0022"},{"Name":"Last-Modified","Value":"Wed, 09 Apr 2025 13:30:39 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/js/chart-helper.js">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\chart-helper.js'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-vEMx\u002Bj0DrWNx98mR01WspeLh7O97yPxbzeqOCs7YgX8="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"539"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022vEMx\u002Bj0DrWNx98mR01WspeLh7O97yPxbzeqOCs7YgX8=\u0022"},{"Name":"Last-Modified","Value":"Thu, 10 Apr 2025 07:24:50 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/js/chart-helper.scrd41xt0i.js">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\chart-helper.js'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"scrd41xt0i"},{"Name":"integrity","Value":"sha256-vEMx\u002Bj0DrWNx98mR01WspeLh7O97yPxbzeqOCs7YgX8="},{"Name":"label","Value":"_content/NeuroMotionDemo/js/chart-helper.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"539"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022vEMx\u002Bj0DrWNx98mR01WspeLh7O97yPxbzeqOCs7YgX8=\u0022"},{"Name":"Last-Modified","Value":"Thu, 10 Apr 2025 07:24:50 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/NeuroMotionDemo/NeuroMotionDemo.btwkt8960z.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\NeuroMotionDemo.btwkt8960z.bundle.scp.css'))</AssetFile>
