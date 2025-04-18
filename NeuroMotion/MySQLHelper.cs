@@ -76,6 +76,31 @@ namespace NeuroMotion
             }
         }
 
+        public void CreateUserTableIfNotExists(string tableName)
+        {
+            // Define the SQL query to create the table, modify this based on actual table
+            string createTableQuery = @"
+                    CREATE TABLE Users (
+                        Id INT AUTO_INCREMENT PRIMARY KEY,
+                        Name VARCHAR(100) NOT NULL,
+                        Value VARCHAR(100) NOT NULL,
+                        Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );";
+
+            if (!TableExists(tableName))
+            {
+                using (var cmd = new MySqlCommand(createTableQuery, connection))
+                {
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine($"Table {tableName} created successfully.");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Table {tableName} already exists.");
+            }
+        }
+
         public void AddData(string name, string value)
         {
             string query = "INSERT INTO NeuroData (Name, Email) VALUES (@name, @email);";
