@@ -1,0 +1,276 @@
+﻿@page "/dashboard"
+@rendermode InteractiveServer
+@using System.Text.Json
+@using NeuroMotionDemo.Services
+@inject DashboardStateService StateService
+@inject MqttService MqttService
+@inject TrendDataService TrendDataService
+@implements IDisposable
+
+<PageTitle>NeuroMotion Dashboard</PageTitle>
+
+<h1>Parkinson's Tremor Monitoring</h1>
+
+<div class="connection-panel">
+    <div class="form-group">
+        <label for="brokerIp">MQTT Broker IP:</label>
+        <input id="brokerIp" @bind="BrokerIp" class="form-control" />
+    </div>
+    <button class="btn btn-primary" @onclick="ConnectToMqtt">Connect</button>
+    <div class="status @(_isConnected ? "connected" : "")">
+        @(_isConnected ? "Connected" : "Disconnected")
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <a href="/trends" class="btn btn-success">
+            <i class="oi oi-graph"></i> View Trend Graphs
+        </a>
+    </div>
+</div>
+
+<!-- Debug panel -->
+<div class="debug-panel">
+    <h4>Debug Information</h4>
+    <p>Connection status: @(_isConnected ? "Connected" : "Not Connected")</p>
+    <p>Sensors in StateService: @(StateService.SensorData?.Count ?? 0)</p>
+    <p>Last message received: @(_lastMessageTime)</p>
+    <button class="btn btn-secondary" @onclick="ConnectToMqtt">Reconnect</button>
+</div>
+
+<!-- Raw data display for troubleshooting -->
+<div class="raw-data">
+    <h4>Raw Data (Debug)</h4>
+    <pre style="background-color:#f8f9fa; padding:10px; overflow:auto; max-height:200px;">@_rawJsonData</pre>
+</div>
+
+@if (StateService.SensorData?.Count > 0)
+{
+    <div class="dashboard-grid">
+        @foreach (var sensor in StateService.SensorData)
+        {
+            <div class="sensor-card">
+                <h3>@FormatSensorName(sensor.Key)</h3>
+
+                @if (TryParseFeatures(sensor.Value, out var torsoData))
+                {
+                    @if (torsoData.TryGetValue("z", out var zAxis))
+                    {
+                        <div class="stats">
+                            <h4>Z-Axis (Primary)</h4>
+                            <div class="stat-row">
+                                <span class="stat-label">RMS:</span>
+                                <span class="stat-value">@FormatValue(zAxis, "rms")</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Dominant Frequency:</span>
+                                <span class="stat-value">@FormatValue(zAxis, "dominant_freq") Hz</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Tremor Power:</span>
+                                <span class="stat-value">@FormatValue(zAxis, "tremor_power")</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Tremor Index:</span>
+                                <span class="stat-value">@FormatValue(zAxis, "tremor_index")</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Is Parkinsonian:</span>
+                                <span class="stat-value @(IsTrue(zAxis, "is_parkinsonian") ? "alert" : "")">
+                                    @(IsTrue(zAxis, "is_parkinsonian") ? "Yes" : "No")
+                                </span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (torsoData.TryGetValue("x", out var xAxis))
+                    {
+                        <div class="stats">
+                            <h4>X-Axis</h4>
+                            <div class="stat-row">
+                                <span class="stat-label">RMS:</span>
+                                <span class="stat-value">@FormatValue(xAxis, "rms")</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Tremor Index:</span>
+                                <span class="stat-value">@FormatValue(xAxis, "tremor_index")</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (torsoData.TryGetValue("y", out var yAxis))
+                    {
+                        <div class="stats">
+                            <h4>Y-Axis</h4>
+                            <div class="stat-row">
+                                <span class="stat-label">RMS:</span>
+                                <span class="stat-value">@FormatValue(yAxis, "rms")</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Tremor Index:</span>
+                                <span class="stat-value">@FormatValue(yAxis, "tremor_index")</span>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="timestamp">
+                    @if (sensor.Value.TryGetValue("timestamp", out var timestampObj) &&
+                   timestampObj is JsonElement timestampElement)
+                    {
+                        @FormatTimestamp(timestampElement)
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Waiting for sensor data...</p>
+}
+
+@code {
+    private string BrokerIp { get; set; } = "10.0.0.91"; // Your Pi's IP
+    private bool _isConnected = false;
+    private string _lastMessageTime = "None";
+    private string _rawJsonData = "No data received";
+    private System.Threading.Timer? _reconnectTimer;
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Dashboard initialized");
+        StateService.OnDataUpdate += OnDataUpdate;
+
+        // Check if MqttService is already connected but UI doesn't reflect it
+        if (MqttService.IsConnected)
+        {
+            _isConnected = true;
+            MqttService.DataReceived += OnDataReceived; // Re-attach event handler
+            Console.WriteLine("Reconnected to existing MQTT session");
+        }
+    }
+
+    private async Task ConnectToMqtt()
+    {
+        Console.WriteLine($"Attempting to connect to broker at {BrokerIp}");
+        try
+        {
+            // Unsubscribe first to prevent duplicate handlers
+            MqttService.DataReceived -= OnDataReceived;
+
+            await MqttService.ConnectAsync(BrokerIp);
+            MqttService.DataReceived += OnDataReceived;
+            _isConnected = true;
+            Console.WriteLine("Connected successfully");
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to connect: {ex.Message}");
+            _isConnected = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void OnDataReceived(object? sender, SensorDataEventArgs e)
+    {
+        _lastMessageTime = DateTime.Now.ToString("HH:mm:ss");
+        _rawJsonData = JsonSerializer.Serialize(e.Data, new JsonSerializerOptions { WriteIndented = true });
+        Console.WriteLine($"Data received from topic: {e.Topic}");
+
+        // Extract sensor name from topic
+        var sensorName = e.Topic.Split('/').LastOrDefault() ?? "unknown";
+
+        // Update dashboard state
+        StateService.UpdateSensorData(e.Topic, e.Data);
+
+        // Also update trend data
+        TrendDataService.ProcessMqttData(e.Data, sensorName);
+    }
+
+    private async void OnDataUpdate()
+    {
+        Console.WriteLine("Data update received, refreshing UI");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private bool TryParseFeatures(Dictionary<string, object> data, out Dictionary<string, Dictionary<string, JsonElement>> torsoData)
+    {
+        torsoData = new Dictionary<string, Dictionary<string, JsonElement>>();
+        try
+        {
+            if (data.TryGetValue("features", out var featuresObj) && featuresObj is JsonElement featuresElement)
+            {
+                var features = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                    featuresElement.GetRawText());
+
+                if (features != null && features.TryGetValue("torso", out var torsoElement))
+                {
+                    var torso = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, JsonElement>>>(
+                        torsoElement.GetRawText());
+
+                    if (torso != null)
+                    {
+                        torsoData = torso;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error parsing features: {ex.Message}");
+            return false;
+        }
+    }
+
+    private string FormatSensorName(string name)
+    {
+        return name.Replace("_", " ").ToUpperInvariant();
+    }
+
+    private string FormatValue(Dictionary<string, JsonElement>? data, string key)
+    {
+        if (data == null || !data.TryGetValue(key, out var value))
+        {
+            return "N/A";
+        }
+
+        if (value.ValueKind == JsonValueKind.Number)
+        {
+            return value.GetDouble().ToString("F2");
+        }
+        return value.ToString();
+    }
+
+    private bool IsTrue(Dictionary<string, JsonElement>? data, string key)
+    {
+        if (data == null || !data.TryGetValue(key, out var value))
+        {
+            return false;
+        }
+
+        return value.ValueKind == JsonValueKind.True;
+    }
+
+    private string FormatTimestamp(JsonElement timestamp)
+    {
+        if (timestamp.TryGetDouble(out double unixTimestamp))
+        {
+            var dateTime = DateTimeOffset.FromUnixTimeSeconds((long)unixTimestamp)
+                .DateTime.ToLocalTime();
+            return dateTime.ToString("HH:mm:ss dd/MM/yyyy");
+        }
+        return timestamp.ToString();
+    }
+
+    public void Dispose()
+    {
+        StateService.OnDataUpdate -= OnDataUpdate;
+        MqttService.DataReceived -= OnDataReceived;
+        _reconnectTimer?.Dispose();
+    }
+}

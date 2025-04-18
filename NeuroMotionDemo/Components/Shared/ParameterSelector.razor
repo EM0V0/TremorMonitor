@@ -1,0 +1,105 @@
+﻿<div class="parameter-selector">
+    <h4>Select Parameters</h4>
+
+    <div class="selector-group">
+        <h5>Sensors</h5>
+        @foreach (var sensor in AvailableSensors)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="@($"sensor_{sensor}")"
+                       checked="@IsSensorSelected(sensor)"
+                       @onchange="@(e => ToggleSensor(sensor, e.Value != null && (bool)e.Value))" />
+                <label class="form-check-label" for="@($"sensor_{sensor}")">
+                    @FormatSensorName(sensor)
+                </label>
+            </div>
+        }
+    </div>
+
+    <div class="selector-group">
+        <h5>Metrics</h5>
+        @foreach (var param in AvailableParameters)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="@($"param_{param}")"
+                       checked="@IsParameterSelected(param)"
+                       @onchange="@(e => ToggleParameter(param, e.Value != null && (bool)e.Value))" />
+                <label class="form-check-label" for="@($"param_{param}")">
+                    @FormatParameterName(param)
+                </label>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<string> AvailableSensors { get; set; } = new();
+
+    [Parameter]
+    public List<string> AvailableParameters { get; set; } = new();
+
+    [Parameter]
+    public List<string> SelectedSensors { get; set; } = new();
+
+    [Parameter]
+    public List<string> SelectedParameters { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<List<string>> SelectedSensorsChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<List<string>> SelectedParametersChanged { get; set; }
+
+    private bool IsSensorSelected(string sensor) => SelectedSensors.Contains(sensor);
+
+    private bool IsParameterSelected(string parameter) => SelectedParameters.Contains(parameter);
+
+    private async Task ToggleSensor(string sensor, bool selected)
+    {
+        if (selected && !SelectedSensors.Contains(sensor))
+        {
+            SelectedSensors.Add(sensor);
+        }
+        else if (!selected && SelectedSensors.Contains(sensor))
+        {
+            SelectedSensors.Remove(sensor);
+        }
+        await SelectedSensorsChanged.InvokeAsync(SelectedSensors);
+    }
+
+    private async Task ToggleParameter(string parameter, bool selected)
+    {
+        if (selected && !SelectedParameters.Contains(parameter))
+        {
+            SelectedParameters.Add(parameter);
+        }
+        else if (!selected && SelectedParameters.Contains(parameter))
+        {
+            SelectedParameters.Remove(parameter);
+        }
+        await SelectedParametersChanged.InvokeAsync(SelectedParameters);
+    }
+
+    private string FormatSensorName(string name)
+    {
+        var parts = name.Split('_');
+        if (parts.Length >= 2)
+        {
+            return $"{parts[0]} ({parts[1].ToUpper()})";
+        }
+        return name.Replace("_", " ");
+    }
+
+    private string FormatParameterName(string name)
+    {
+        switch (name)
+        {
+            case "rms": return "RMS";
+            case "dominant_freq": return "Dominant Frequency";
+            case "tremor_power": return "Tremor Power";
+            case "tremor_index": return "Tremor Index";
+            default: return name.Replace("_", " ");
+        }
+    }
+}
