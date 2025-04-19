@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NeuroMotion
+namespace NeuroMotion_API.Models
 {
-    public class RegisterRequest
+    public class LoginRequest
     {
-        public required string Name { get; set; }
         public required string Email { get; set; }
-        public required string Role { get; set; }
         public required string Password { get; set; }
     }
 
