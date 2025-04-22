@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj": {}
+    "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj": {}
   },
   "projects": {
-    "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj": {
+    "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+        "projectUniqueName": "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
         "projectName": "NeuroMotionDemo",
-        "projectPath": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
-        "packagesPath": "C:\\Users\\dibya\\.nuget\\packages\\",
-        "outputPath": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\obj\\",
+        "projectPath": "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+        "packagesPath": "C:\\Users\\ramit\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotionDemo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\dibya\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ramit\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

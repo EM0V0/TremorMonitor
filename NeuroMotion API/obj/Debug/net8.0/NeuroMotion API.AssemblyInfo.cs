@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeuroMotion API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f96d775505e92a1422501b1631c35cf3dea4a8b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18c6e24a13456f681203da14a6ebeb3411c544df")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeuroMotion API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeuroMotion API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
