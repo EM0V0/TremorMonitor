@@ -1,4 +1,5 @@
 import time
+import os
 import numpy as np
 from sensors.adxl345 import ADXL345
 from processing.features import TremorProcessor
@@ -44,8 +45,8 @@ class MultiSensorDataCollector:
         # Initialize data service (console output by default)
         """self.data_service = ConsoleDataService()"""
         self.data_service = MQTTDataService(
-            broker="localhost",  # Use localhost if broker is on the Pi
-            port=1883,
+            broker="darkside.tail3c652f.ts.net",
+            port=8883,
             topic_prefix="parkinsons/tremor"
         )
 

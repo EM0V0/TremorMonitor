@@ -14,7 +14,7 @@
 <div class="connection-panel">
     <div class="form-group">
         <label for="brokerIp">MQTT Broker IP:</label>
-        <input id="brokerIp" @bind="BrokerIp" class="form-control" />
+        <input id="brokerIp" @bind="BrokerHost" class="form-control" />
     </div>
     <button class="btn btn-primary" @onclick="ConnectToMqtt">Connect</button>
     <div class="status @(_isConnected ? "connected" : "")">
@@ -132,7 +132,7 @@ else
 }
 
 @code {
-    private string BrokerIp { get; set; } = "10.0.0.91"; // Your Pi's IP
+    private string BrokerHost { get; set; } = "darkside.tail3c652f.ts.net";// Your Pi's IP
     private bool _isConnected = false;
     private string _lastMessageTime = "None";
     private string _rawJsonData = "No data received";
@@ -154,23 +154,26 @@ else
 
     private async Task ConnectToMqtt()
     {
-        Console.WriteLine($"Attempting to connect to broker at {BrokerIp}");
+        Console.WriteLine($"Attempting to connect to broker at {BrokerHost}");
         try
         {
             // Unsubscribe first to prevent duplicate handlers
             MqttService.DataReceived -= OnDataReceived;
 
-            await MqttService.ConnectAsync(BrokerIp);
+            await MqttService.ConnectAsync(BrokerHost, 8883);
             MqttService.DataReceived += OnDataReceived;
             _isConnected = true;
             Console.WriteLine("Connected successfully");
             await InvokeAsync(StateHasChanged);
+            
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to connect: {ex.Message}");
             _isConnected = false;
             await InvokeAsync(StateHasChanged);
+            
+
         }
     }
 

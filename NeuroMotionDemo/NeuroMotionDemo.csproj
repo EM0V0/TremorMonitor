@@ -9,6 +9,12 @@
   <ItemGroup>
     <PackageReference Include="MQTTnet" Version="4.2.1.781" />
     <PackageReference Include="Radzen.Blazor" Version="6.5.1" />
+    <Content Include="certs\mosquitto-ca.crt">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+  <Content Include="certs\dashboard-client.pfx">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>	
   </ItemGroup>
 
 </Project>

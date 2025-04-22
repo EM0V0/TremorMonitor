@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeuroMotionDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28b0b097dd28c5f20b453fccfc802858acb4d398")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeuroMotionDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeuroMotionDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

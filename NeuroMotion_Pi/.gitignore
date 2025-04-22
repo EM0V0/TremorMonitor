@@ -8,6 +8,3 @@ wheels/
 
 # Virtual environments
 .venv
-__pycache__/
-DARKSide_env/
-.git/

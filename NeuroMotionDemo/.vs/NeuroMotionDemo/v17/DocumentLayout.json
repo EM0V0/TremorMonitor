@@ -1,90 +1,98 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\",
+  "WorkspaceRootPath": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\services\\trenddataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:services\\trenddataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\wwwroot\\js\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\js\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\shared\\trendchart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\shared\\trendchart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\pages\\trendviewer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\pages\\trendviewer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\neuromotiondemo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:neuromotiondemo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\services\\mqttservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\services\\mqttservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:services\\mqttservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\shared\\parameterselector.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\shared\\parameterselector.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\services\\dashboardstateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:services\\dashboardstateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\neuromotiondemo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:neuromotiondemo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\models\\trenddatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:models\\trenddatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\wwwroot\\css\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\wwwroot\\js\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\js\\chart-helper.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\wwwroot\\css\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\app.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\services\\trenddataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:services\\trenddataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\pages\\trendviewer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\pages\\trendviewer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\shared\\trendchart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\shared\\trendchart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\shared\\parameterselector.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\shared\\parameterselector.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\services\\dashboardstateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:services\\dashboardstateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\models\\trenddatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:models\\trenddatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\wwwroot\\css\\bootstrap.min.css.map||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\darkside\\neuromotiondemo\\wwwroot\\css\\bootstrap.min.css.map||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:wwwroot\\css\\bootstrap.min.css.map||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|d:\\jhu\\neuromotion\\neuromotiondemo\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{61BA883E-6433-430A-8C82-32CA3B5FD8AB}|NeuroMotionDemo.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -94,27 +102,212 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MqttService.cs",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Services\\MqttService.cs",
+              "RelativeDocumentMoniker": "Services\\MqttService.cs",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Services\\MqttService.cs",
+              "RelativeToolTip": "Services\\MqttService.cs",
+              "ViewState": "AgIAALkAAAAAAAAAAAAswMoAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T13:33:54.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "wwwroot\\css\\site.css",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACYAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-04-09T13:40:41.054Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NeuroMotionDemo.csproj",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+              "RelativeDocumentMoniker": "NeuroMotionDemo.csproj",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+              "RelativeToolTip": "NeuroMotionDemo.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-09T13:32:30.246Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "Dashboard.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\Dashboard.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Dashboard.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\Dashboard.razor",
+              "RelativeToolTip": "Components\\Pages\\Dashboard.razor",
+              "ViewState": "AgIAAAABAAAAAAAAAAAmwBcBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-09T13:38:35.482Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\_Imports.razor",
+              "RelativeDocumentMoniker": "Components\\_Imports.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\_Imports.razor",
+              "RelativeToolTip": "Components\\_Imports.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-09T13:37:22.538Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T13:31:37.55Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "chart-helper.js",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\js\\chart-helper.js",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\js\\chart-helper.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\chart-helper.js",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\js\\chart-helper.js",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\js\\chart-helper.js",
               "RelativeToolTip": "wwwroot\\js\\chart-helper.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-04-10T07:21:15.625Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "Components\\Layout\\MainLayout.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-09T13:37:41.247Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-09T13:50:36.237Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Error.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\Error.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Error.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\Error.razor",
+              "RelativeToolTip": "Components\\Pages\\Error.razor",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-19T18:46:28.478Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "Components\\Layout\\NavMenu.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA8AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-09T13:37:46.438Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "bootstrap.min.css",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\bootstrap.min.css",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css",
+              "RelativeToolTip": "wwwroot\\css\\bootstrap.min.css",
+              "ViewState": "AgIAACAsAAAAAAAAAAAgwE8tAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-04-09T13:40:26.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "app.css",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\app.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\app.css",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\app.css",
+              "RelativeToolTip": "wwwroot\\css\\app.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-04-09T13:40:19.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "TrendDataService.cs",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Services\\TrendDataService.cs",
+              "RelativeDocumentMoniker": "Services\\TrendDataService.cs",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Services\\TrendDataService.cs",
+              "RelativeToolTip": "Services\\TrendDataService.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAswJMAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-10T05:13:30.086Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "TrendViewer.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\TrendViewer.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\TrendViewer.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\TrendViewer.razor",
+              "RelativeToolTip": "Components\\Pages\\TrendViewer.razor",
+              "ViewState": "AgIAAJ4AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-10T04:44:25.047Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Home.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Home.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-19T18:47:09.201Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
               "Title": "TrendChart.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Shared\\TrendChart.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Shared\\TrendChart.razor",
               "RelativeDocumentMoniker": "Components\\Shared\\TrendChart.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Shared\\TrendChart.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Shared\\TrendChart.razor",
               "RelativeToolTip": "Components\\Shared\\TrendChart.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -122,121 +315,23 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "TrendViewer.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Pages\\TrendViewer.razor",
-              "RelativeDocumentMoniker": "Components\\Pages\\TrendViewer.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Pages\\TrendViewer.razor",
-              "RelativeToolTip": "Components\\Pages\\TrendViewer.razor",
-              "ViewState": "AgIAAOAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-10T04:44:25.047Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "TrendDataService.cs",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Services\\TrendDataService.cs",
-              "RelativeDocumentMoniker": "Services\\TrendDataService.cs",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Services\\TrendDataService.cs",
-              "RelativeToolTip": "Services\\TrendDataService.cs",
-              "ViewState": "AgIAAIUAAAAAAAAAAAAswJEAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-10T05:13:30.086Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 17,
               "Title": "App.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\App.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\App.razor",
               "RelativeDocumentMoniker": "Components\\App.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\App.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\App.razor",
               "RelativeToolTip": "Components\\App.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAmwBcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-10T05:24:46.936Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-10T05:24:46.936Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MqttService.cs",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Services\\MqttService.cs",
-              "RelativeDocumentMoniker": "Services\\MqttService.cs",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Services\\MqttService.cs",
-              "RelativeToolTip": "Services\\MqttService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T13:33:54.908Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "NeuroMotionDemo.csproj",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
-              "RelativeDocumentMoniker": "NeuroMotionDemo.csproj",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
-              "RelativeToolTip": "NeuroMotionDemo.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-09T13:32:30.246Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Dashboard.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Pages\\Dashboard.razor",
-              "RelativeDocumentMoniker": "Components\\Pages\\Dashboard.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Pages\\Dashboard.razor",
-              "RelativeToolTip": "Components\\Pages\\Dashboard.razor",
-              "ViewState": "AgIAAOMAAAAAAAAAAAD4v4oAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-09T13:38:35.482Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T13:31:37.55Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "_Imports.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\_Imports.razor",
-              "RelativeDocumentMoniker": "Components\\_Imports.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\_Imports.razor",
-              "RelativeToolTip": "Components\\_Imports.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-09T13:37:22.538Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "site.css",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "wwwroot\\css\\site.css",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAAJMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-04-09T13:40:41.054Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 18,
               "Title": "ParameterSelector.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Shared\\ParameterSelector.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Shared\\ParameterSelector.razor",
               "RelativeDocumentMoniker": "Components\\Shared\\ParameterSelector.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Shared\\ParameterSelector.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Shared\\ParameterSelector.razor",
               "RelativeToolTip": "Components\\Shared\\ParameterSelector.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAGkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -244,11 +339,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 19,
               "Title": "DashboardStateService.cs",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Services\\DashboardStateService.cs",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Services\\DashboardStateService.cs",
               "RelativeDocumentMoniker": "Services\\DashboardStateService.cs",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Services\\DashboardStateService.cs",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Services\\DashboardStateService.cs",
               "RelativeToolTip": "Services\\DashboardStateService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -256,11 +351,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 20,
               "Title": "TrendDataPoint.cs",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Models\\TrendDataPoint.cs",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Models\\TrendDataPoint.cs",
               "RelativeDocumentMoniker": "Models\\TrendDataPoint.cs",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Models\\TrendDataPoint.cs",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Models\\TrendDataPoint.cs",
               "RelativeToolTip": "Models\\TrendDataPoint.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -268,59 +363,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "bootstrap.min.css",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\bootstrap.min.css",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css",
-              "RelativeToolTip": "wwwroot\\css\\bootstrap.min.css",
-              "ViewState": "AgIAADctAAAAAAAAAAAgwE8tAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-04-09T13:40:26.451Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "app.css",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\app.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\app.css",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\app.css",
-              "RelativeToolTip": "wwwroot\\css\\app.css",
-              "ViewState": "AgIAABsAAAAAAAAAAAAgwDMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-04-09T13:40:19.544Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Layout\\NavMenu.razor",
-              "RelativeDocumentMoniker": "Components\\Layout\\NavMenu.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Layout\\NavMenu.razor",
-              "RelativeToolTip": "Components\\Layout\\NavMenu.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-09T13:37:46.438Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "MainLayout.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Layout\\MainLayout.razor",
-              "RelativeDocumentMoniker": "Components\\Layout\\MainLayout.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Layout\\MainLayout.razor",
-              "RelativeToolTip": "Components\\Layout\\MainLayout.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-09T13:37:41.247Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 21,
               "Title": "Routes.razor",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Routes.razor",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Routes.razor",
               "RelativeDocumentMoniker": "Components\\Routes.razor",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\Components\\Routes.razor",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\Components\\Routes.razor",
               "RelativeToolTip": "Components\\Routes.razor",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
@@ -328,27 +375,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 22,
               "Title": "bootstrap.min.css.map",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css.map",
+              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css.map",
               "RelativeDocumentMoniker": "wwwroot\\css\\bootstrap.min.css.map",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css.map",
+              "ToolTip": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\wwwroot\\css\\bootstrap.min.css.map",
               "RelativeToolTip": "wwwroot\\css\\bootstrap.min.css.map",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2025-04-09T13:55:45.501Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-04-09T13:50:36.237Z"
             }
           ]
         }

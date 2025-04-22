@@ -1700,11 +1700,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+      "projectUniqueName": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
       "projectName": "NeuroMotionDemo",
-      "projectPath": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
+      "projectPath": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\NeuroMotionDemo.csproj",
       "packagesPath": "C:\\Users\\dibya\\.nuget\\packages\\",
-      "outputPath": "D:\\JHU\\NeuroMotion\\NeuroMotionDemo\\obj\\",
+      "outputPath": "D:\\JHU\\NeuroMotion\\DARKside\\NeuroMotionDemo\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
