@@ -1,9 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroMotion", "NeuroMotion.csproj", "{C1E2EFAA-65EA-495E-AF61-B6C03155B61F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		UserController.cs = UserController.cs
+		UserModel.cs = UserModel.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroMotion API", "..\NeuroMotion API\NeuroMotion API.csproj", "{3E3E28C8-A470-4BDD-9063-80EB24CC785B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroMotionDemo", "..\NeuroMotionDemo\NeuroMotionDemo.csproj", "{A6016519-28DC-6584-3445-AE5452E1C9D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,14 @@ Global
 		{C1E2EFAA-65EA-495E-AF61-B6C03155B61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1E2EFAA-65EA-495E-AF61-B6C03155B61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1E2EFAA-65EA-495E-AF61-B6C03155B61F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E3E28C8-A470-4BDD-9063-80EB24CC785B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E3E28C8-A470-4BDD-9063-80EB24CC785B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E3E28C8-A470-4BDD-9063-80EB24CC785B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E3E28C8-A470-4BDD-9063-80EB24CC785B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6016519-28DC-6584-3445-AE5452E1C9D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6016519-28DC-6584-3445-AE5452E1C9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6016519-28DC-6584-3445-AE5452E1C9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6016519-28DC-6584-3445-AE5452E1C9D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

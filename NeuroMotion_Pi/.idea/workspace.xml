@@ -5,50 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a1d97f2-7446-44f0-8458-5f51156fea6c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/DesignTimeBuild/.dtbcache.v2" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/DesignTimeBuild/.dtbcache.v2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/3674e23a-28b1-489b-afce-b093270d7c95.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/4cc8b603-2728-4d15-9d8a-a34c11949c94.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/5deb0820-ed92-44db-8345-1e3ad17b3f5d.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/7b613d3f-7a55-43fa-97c2-fa4f1c42920a.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/7bf5a934-2f76-4c3f-b0d3-5724d1bf3265.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/a9eae574-da04-427e-9ce4-13393d50a2b5.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/af55b0b1-e231-4801-b7c5-a1f49f793d53.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/b25db82c-e7ee-482a-b02d-df6d0ed59235.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/d7752b35-1b67-4796-9e7f-194ae6e538eb.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/FileContentIndex/ebc03758-529f-4980-bfc4-9d5021729576.vsidx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/v17/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/v17/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/v17/DocumentLayout.backup.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/v17/DocumentLayout.backup.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/v17/DocumentLayout.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/.vs/NeuroMotionDemo/v17/DocumentLayout.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/Components/Pages/Dashboard.razor" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/Components/Pages/Dashboard.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/NeuroMotionDemo.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/NeuroMotionDemo.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/Services/MqttService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/Services/MqttService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.staticwebassets.endpoints.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.staticwebassets.endpoints.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.staticwebassets.runtime.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.staticwebassets.runtime.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.genruntimeconfig.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/NeuroMotionDemo.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/ref/NeuroMotionDemo.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/ref/NeuroMotionDemo.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/refint/NeuroMotionDemo.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/refint/NeuroMotionDemo.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.build.endpoints.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.build.endpoints.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.build.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.development.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.pack.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets.pack.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets/msbuild.NeuroMotionDemo.Microsoft.AspNetCore.StaticWebAssetEndpoints.props" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets/msbuild.NeuroMotionDemo.Microsoft.AspNetCore.StaticWebAssetEndpoints.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets/msbuild.NeuroMotionDemo.Microsoft.AspNetCore.StaticWebAssets.props" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/Debug/net8.0/staticwebassets/msbuild.NeuroMotionDemo.Microsoft.AspNetCore.StaticWebAssets.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/NeuroMotionDemo.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/NeuroMotionDemo.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +64,7 @@
       <updated>1744999000907</updated>
       <workItem from="1744999002073" duration="2729000" />
       <workItem from="1745019351531" duration="40337000" />
-      <workItem from="1745241958389" duration="16277000" />
+      <workItem from="1745241958389" duration="17257000" />
     </task>
     <servers />
   </component>
