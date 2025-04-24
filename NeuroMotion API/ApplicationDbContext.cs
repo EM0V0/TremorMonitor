@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace NeuroMotion
+namespace NeuroMotion_API
 {
     public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
     {

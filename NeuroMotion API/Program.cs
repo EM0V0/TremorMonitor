@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using NeuroMotion; // replace with the actual namespace for ApplicationDbContext
+using NeuroMotion_API; // replace with the actual namespace for ApplicationDbContext
 
 var builder = WebApplication.CreateBuilder(args);
 
