@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NeuroMotion;
 using BCrypt.Net;
 using NeuroMotion_API.Models;
+using NeuroMotion_API;
 
 [ApiController]
 [Route("api/user")]

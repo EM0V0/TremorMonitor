@@ -2,7 +2,6 @@ C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\appsetting
 C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\appsettings.json
 C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\NeuroMotion API.staticwebassets.endpoints.json
 C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\NeuroMotion API.exe
-C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\NeuroMotion API.dll.config
 C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\NeuroMotion API.deps.json
 C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\NeuroMotion API.runtimeconfig.json
 C:\Users\ramit\source\repos\DARKside\NeuroMotion API\bin\Debug\net8.0\NeuroMotion API.dll
