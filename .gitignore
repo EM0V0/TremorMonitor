@@ -49,3 +49,4 @@ project.assets.json
 !?*.[Cc]ache/
 
 /NeuroMotion API/appsettings.json
+/NeuroMotion API/appsettings.Development.json
