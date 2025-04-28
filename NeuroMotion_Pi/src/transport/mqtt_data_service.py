@@ -4,31 +4,47 @@ import ssl
 import time
 import uuid
 import paho.mqtt.client as mqtt
+from pathlib import Path
+from dotenv import load_dotenv
 from .data_service import DataService
 
 
 class MQTTDataService(DataService):
     """MQTT Data Service with TLS 1.3 and FDA 21 CFR Part 11 compliance"""
 
-    def __init__(self, broker="darkside.tail3c652f.ts.net", port=8883, topic_prefix="parkinsons/tremor"):
-        """Initialize with secure defaults"""
-        self.broker = broker
-        self.port = port
-        self.topic_prefix = topic_prefix
+    def __init__(self, broker=None, port=None, topic_prefix=None):
+        """Initialize with secure defaults from environment variables"""
+        # Load environment variables from .darkside folder
+        darkside_env = Path.home() / '.darkside' / '.env'
+        load_dotenv(dotenv_path=darkside_env)
+
+        # Get values from environment variables with no hardcoded fallbacks
+        self.broker = broker or os.getenv("MQTT_BROKER")
+        self.port = port or int(os.getenv("MQTT_PORT", 8883))
+        self.topic_prefix = topic_prefix or os.getenv("MQTT_TOPIC_PREFIX", "parkinsons/tremor")
         self.client = None
         self.connected = False
         self.client_id = f"darkside-{uuid.uuid4().hex[:8]}"
 
-        # Load credentials from environment or secure configuration
-        # In production, use secure storage for credentials
-        self.username = os.getenv("MQTT_USERNAME", "mqttuser")
-        self.password = os.getenv("MQTT_PASSWORD", "d4r361de")
+        # Load credentials from environment variables
+        self.username = os.getenv("MQTT_USERNAME")
+        self.password = os.getenv("MQTT_PASSWORD")
 
-        # Store certificate paths
-        self.cert_dir = os.path.expanduser("~/DARKSide/certs")
-        self.ca_cert = os.path.join(self.cert_dir, "mosquitto-ca.crt")
-        self.client_cert = os.path.join(self.cert_dir, "dashboard-client.crt")
-        self.client_key = os.path.join(self.cert_dir, "dashboard-client.key")
+        # Get certificate paths from environment variables
+        self.ca_cert = os.getenv("MQTT_CA_CERT")
+        self.client_cert = os.getenv("MQTT_CLIENT_CERT")
+        self.client_key = os.getenv("MQTT_CLIENT_KEY")
+
+        # Validate required configuration
+        if not all([self.broker, self.username, self.password,
+                    self.ca_cert, self.client_cert, self.client_key]):
+            print("CRITICAL: Missing required MQTT configuration in .darkside/.env")
+            print(f"Broker: {'Set' if self.broker else 'MISSING'}")
+            print(f"Username: {'Set' if self.username else 'MISSING'}")
+            print(f"Password: {'Set' if self.password else 'MISSING'}")
+            print(f"CA Cert: {'Set' if self.ca_cert else 'MISSING'}")
+            print(f"Client Cert: {'Set' if self.client_cert else 'MISSING'}")
+            print(f"Client Key: {'Set' if self.client_key else 'MISSING'}")
 
     def initialize(self):
         """Initialize MQTT client and connect to broker securely"""

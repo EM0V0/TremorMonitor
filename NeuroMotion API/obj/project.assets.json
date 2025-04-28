@@ -1555,23 +1555,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ramit\\.nuget\\packages\\": {},
+    "C:\\Users\\dibya\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotion API\\NeuroMotion API.csproj",
+      "projectUniqueName": "D:\\JHU\\NeuroMotion\\DARKSide V2\\DARKside\\NeuroMotion API\\NeuroMotion API.csproj",
       "projectName": "NeuroMotion API",
-      "projectPath": "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotion API\\NeuroMotion API.csproj",
-      "packagesPath": "C:\\Users\\ramit\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ramit\\source\\repos\\DARKside\\NeuroMotion API\\obj\\",
+      "projectPath": "D:\\JHU\\NeuroMotion\\DARKSide V2\\DARKside\\NeuroMotion API\\NeuroMotion API.csproj",
+      "packagesPath": "C:\\Users\\dibya\\.nuget\\packages\\",
+      "outputPath": "D:\\JHU\\NeuroMotion\\DARKSide V2\\DARKside\\NeuroMotion API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ramit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dibya\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

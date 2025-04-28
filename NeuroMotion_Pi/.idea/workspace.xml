@@ -5,7 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a1d97f2-7446-44f0-8458-5f51156fea6c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/bin/Debug/net8.0/NeuroMotion API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/bin/Debug/net8.0/NeuroMotion API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/bin/Debug/net8.0/NeuroMotion API.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/bin/Debug/net8.0/NeuroMotion API.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/bin/Debug/net8.0/NeuroMotion API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/bin/Debug/net8.0/NeuroMotion API.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.genruntimeconfig.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/NeuroMotion API.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/apphost.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/ref/NeuroMotion API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/ref/NeuroMotion API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/refint/NeuroMotion API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Debug/net8.0/refint/NeuroMotion API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/NeuroMotion API.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/NeuroMotion API.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/NeuroMotion API.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/NeuroMotion API.csproj.nuget.g.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/Release/net8.0/NeuroMotion API.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotion API/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotion API/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../NeuroMotionDemo/bin/Debug/net8.0/NeuroMotionDemo.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,7 +41,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -35,7 +63,7 @@
     &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/JHU/NeuroMotion/DARKside/NeuroMotion_Pi&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -64,7 +92,7 @@
       <updated>1744999000907</updated>
       <workItem from="1744999002073" duration="2729000" />
       <workItem from="1745019351531" duration="40337000" />
-      <workItem from="1745241958389" duration="17257000" />
+      <workItem from="1745241958389" duration="31035000" />
     </task>
     <servers />
   </component>
