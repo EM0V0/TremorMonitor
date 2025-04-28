@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroMotion API", "NeuroMotion API\NeuroMotion API.csproj", "{F5659258-5C82-19C4-4C5C-A8495985962E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuroMotionDemo", "NeuroMotionDemo\NeuroMotionDemo.csproj", "{80FA5CED-E3AA-1A4B-00F2-9B97D2CCECC3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5659258-5C82-19C4-4C5C-A8495985962E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5659258-5C82-19C4-4C5C-A8495985962E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5659258-5C82-19C4-4C5C-A8495985962E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5659258-5C82-19C4-4C5C-A8495985962E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80FA5CED-E3AA-1A4B-00F2-9B97D2CCECC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80FA5CED-E3AA-1A4B-00F2-9B97D2CCECC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80FA5CED-E3AA-1A4B-00F2-9B97D2CCECC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80FA5CED-E3AA-1A4B-00F2-9B97D2CCECC3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {682B317D-DDE8-4D4A-B9E4-F7C307A50906}
+	EndGlobalSection
+EndGlobal

@@ -9,10 +9,30 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "NeuroMotion.LoginRequest",
+        "Type": "NeuroMotion_API.Models.LoginRequest",
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "GetCurrentUser",
+    "RelativePath": "api/user/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/user/refresh-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -25,7 +45,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "NeuroMotion.RegisterRequest",
+        "Type": "NeuroMotion_API.Models.RegisterRequest",
         "IsRequired": true
       }
     ],
@@ -41,7 +61,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[NeuroMotion_API.WeatherForecast, NeuroMotion API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[NeuroMotion_API.Controllers.WeatherForecast, NeuroMotion API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
