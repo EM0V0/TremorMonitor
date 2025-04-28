@@ -48,3 +48,4 @@ project.assets.json
 # but keep track of directories ending in .cache
 !?*.[Cc]ache/
 
+/NeuroMotion API/appsettings.json
