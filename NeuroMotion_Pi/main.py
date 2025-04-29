@@ -44,11 +44,7 @@ class MultiSensorDataCollector:
 
         # Initialize data service (console output by default)
         """self.data_service = ConsoleDataService()"""
-        self.data_service = MQTTDataService(
-            broker="darkside.tail3c652f.ts.net",
-            port=8883,
-            topic_prefix="parkinsons/tremor"
-        )
+        self.data_service = MQTTDataService()
 
         # Set window size
         self.window_size = proc_config.get('window_size', 256)
