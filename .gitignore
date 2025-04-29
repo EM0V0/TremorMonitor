@@ -6,6 +6,7 @@
 /.vs
 .vs/
 /NeuroMotionDemo/.vs
+/NeuroMotionDemo/bin/
 /NeuroMotion
 /bin/
 /obj/
