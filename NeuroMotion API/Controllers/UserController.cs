@@ -351,6 +351,36 @@ public class UserController : ControllerBase
             return StatusCode(500, new { message = "An error occurred while refreshing token" });
         }
     }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        try
+        {
+            // Find the user by ID
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            // Find and delete associated SensorData
+            var sensorData = _context.SensorData.Where(sd => sd.UserID == id);
+            _context.SensorData.RemoveRange(sensorData);
+
+            // Delete the user
+            _context.Users.Remove(user);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "User and associated SensorData deleted successfully" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error deleting user with ID {id}: {ex.Message}");
+            return StatusCode(500, new { message = "An error occurred while deleting the user" });
+        }
+    }
 }
 
 
