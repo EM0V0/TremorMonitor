@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NeuroMotion
 {
-    public class ApplicationDbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public Microsoft.EntityFrameworkCore.DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<SensorData> SensorData { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
