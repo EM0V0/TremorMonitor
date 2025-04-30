@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NeuroMotion; // replace with the actual namespace for ApplicationDbContext
+using NeuroMotion_API; // replace with the actual namespace for ApplicationDbContext
 using NeuroMotion_API.Services;
 using System.Text;
 using Microsoft.AspNetCore.Diagnostics;
