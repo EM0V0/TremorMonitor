@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NeuroMotion_API.Models;
+using NeuroMotion_API;
 using Microsoft.Extensions.Logging;
 
 [ApiController]
@@ -92,7 +92,7 @@ public class SensorDataController : ControllerBase
         {
             simulatedData.Add(new SensorData
             {
-                UserID = 1
+                UserID = 1,
                 TremorPower = (float)(random.NextDouble() * 100), 
                 TremorIndex = (float)(random.NextDouble() * 1000),
                 CurrentTime = DateTime.UtcNow.AddSeconds(-i) // Simulate timestamps within the last 50 seconds
