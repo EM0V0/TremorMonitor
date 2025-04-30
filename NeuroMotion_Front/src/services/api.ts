@@ -45,13 +45,13 @@ apiInstance.interceptors.request.use(
       }
     }
     
-    // 从cookie获取令牌而不是localStorage
+    // Get token from cookie instead of localStorage
     const token = cookieService.getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // 使用节流函数更新用户活动时间戳，限制频率
+    // Use throttled function to update user activity timestamp, limiting frequency
     if (authService.isAuthenticated()) {
       updateActivityThrottled();
     }
@@ -64,10 +64,10 @@ apiInstance.interceptors.request.use(
   }
 );
 
-// 创建节流函数以限制活动更新的频率
+// Create throttled function to limit activity update frequency
 const updateActivityThrottled = throttle(() => {
   authService.updateActivityTimestamp?.();
-}, 30000); // 30秒节流
+}, 30000); // 30 seconds throttling
 
 // Response interceptor for error handling and performance tracking
 apiInstance.interceptors.response.use(

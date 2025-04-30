@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
-// 模拟报告数据
+// Mock report data
 const MOCK_REPORTS = [
   {
     id: 'r1',
@@ -61,7 +61,7 @@ const MOCK_REPORTS = [
   },
 ];
 
-// 报告类型选项
+// Report type options
 const REPORT_TYPES = [
   { id: 'tremor-analysis', name: 'Tremor Analysis' },
   { id: 'medication-analysis', name: 'Medication Effectiveness' },
@@ -86,7 +86,7 @@ const ReportsPage: React.FC = () => {
   const [selectedReportType, setSelectedReportType] = useState('');
   const [selectedPatientId, setSelectedPatientId] = useState('');
   
-  // 模拟患者下拉菜单数据
+  // Mock patient dropdown data
   const patients = [
     { id: 'p1', name: 'Robert Chen' },
     { id: 'p2', name: 'Emily Wilson' },
@@ -95,7 +95,7 @@ const ReportsPage: React.FC = () => {
     { id: 'p5', name: 'David Kim' },
   ];
   
-  // 模拟加载数据
+  // Mock loading data
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -104,7 +104,7 @@ const ReportsPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
   
-  // 过滤报告列表
+  // Filter report list
   const filteredReports = reports.filter(report => {
     const matchesSearch = 
       report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -113,22 +113,22 @@ const ReportsPage: React.FC = () => {
     
     const matchesType = typeFilter === 'all' || report.type === typeFilter;
     
-    // 如果是家属用户，只显示关联到该家属患者的报告
+    // If user is family member, only show reports related to their patient
     if (user?.role === 'family') {
-      // 在实际应用中，这里需要检查该报告是否与家属关联的患者有关
-      // 这里我们假设家属只能看到Robert Chen的报告
+      // In real application, we need to check if the report is related to family member's patient
+      // Here we assume family member can only see Robert Chen's report
       return matchesSearch && matchesType && report.patientId === 'p1';
     }
     
     return matchesSearch && matchesType;
   });
   
-  // 处理报告查看
+  // Handle report view
   const handleViewReport = (reportId: string) => {
     navigate(`/reports/${reportId}`);
   };
   
-  // 处理报告下载
+  // Handle report download
   const handleDownloadReport = (reportId: string) => {
     const report = reports.find(r => r.id === reportId);
     if (!report) return;
@@ -139,17 +139,17 @@ const ReportsPage: React.FC = () => {
     }
     
     alert(`Downloading ${report.title}...`);
-    // 在实际应用中，这里应该触发一个下载请求
+    // In real application, this should trigger a download request
   };
   
-  // 处理报告删除
+  // Handle report delete
   const handleDeleteReport = (reportId: string) => {
     if (window.confirm('Are you sure you want to delete this report?')) {
       setReports(prev => prev.filter(r => r.id !== reportId));
     }
   };
   
-  // 处理报告生成
+  // Handle report generation
   const handleGenerateReport = () => {
     if (!selectedReportType || !selectedPatientId) {
       alert('Please select both report type and patient');
@@ -158,7 +158,7 @@ const ReportsPage: React.FC = () => {
     
     setIsGeneratingReport(true);
     
-    // 模拟报告生成过程
+    // Mock report generation process
     setTimeout(() => {
       const reportType = REPORT_TYPES.find(t => t.id === selectedReportType);
       const patient = patients.find(p => p.id === selectedPatientId);
@@ -178,7 +178,7 @@ const ReportsPage: React.FC = () => {
         
         setReports(prev => [newReport, ...prev]);
         
-        // 模拟报告处理完成
+        // Mock report processing completion
         setTimeout(() => {
           setReports(prev => 
             prev.map(r => 
@@ -198,7 +198,7 @@ const ReportsPage: React.FC = () => {
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
-      {/* 页面标题和操作栏 */}
+      {/* Page title and action bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
         <div className="w-full md:w-72">
           <div className="relative">
@@ -229,7 +229,7 @@ const ReportsPage: React.FC = () => {
             ))}
           </select>
           
-          {/* 只对医生和管理员显示报告生成按钮 */}
+          {/* Only show report generation button for doctors and admins */}
           {(user?.role === 'doctor' || user?.role === 'admin') && (
             <button
               onClick={() => setIsGeneratingReport(true)}
@@ -244,7 +244,7 @@ const ReportsPage: React.FC = () => {
         </div>
       </div>
       
-      {/* 生成报告对话框 */}
+      {/* Report generation dialog */}
       {isGeneratingReport && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
@@ -304,7 +304,7 @@ const ReportsPage: React.FC = () => {
         </div>
       )}
       
-      {/* 报告列表 */}
+      {/* Report list */}
       <div className="bg-white overflow-hidden shadow rounded-lg">
         {loading ? (
           <div className="p-8 flex justify-center">
@@ -388,7 +388,7 @@ const ReportsPage: React.FC = () => {
                         Download
                       </button>
                       
-                      {/* 只对管理员显示删除按钮 */}
+                      {/* Only show delete button for admins */}
                       {user?.role === 'admin' && (
                         <button
                           className="text-red-600 hover:text-red-900"
@@ -418,7 +418,7 @@ const ReportsPage: React.FC = () => {
           </div>
         )}
         
-        {/* 分页控件 */}
+        {/* Pagination control */}
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>

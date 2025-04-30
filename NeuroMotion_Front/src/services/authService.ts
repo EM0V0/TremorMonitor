@@ -181,7 +181,7 @@ export const authService = {
       }
     }
     
-    // 清理敏感内存数据
+    // Clear sensitive data from memory
     credentials.password = '';
     
     // If we get here, all attempts failed
@@ -191,7 +191,7 @@ export const authService = {
 
   // Logout user
   logout: (): void => {
-    // 使用cookieService清除认证数据
+    // Use cookieService to clear authentication data
     cookieService.clearAuth();
     
     // Additional cleanup if needed

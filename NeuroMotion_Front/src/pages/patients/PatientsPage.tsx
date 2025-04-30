@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import PatientRow from '@/components/PatientRow';
 
-// 模拟患者数据
+// Mock patient data
 const MOCK_PATIENTS = [
   {
     id: 'p1',

@@ -17,9 +17,9 @@ const SettingsPage: React.FC = () => {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     email: user?.email || '',
-    phone: '555-123-4567', // 模拟数据
-    jobTitle: 'Neurologist', // 模拟数据
-    bio: 'Specialized in movement disorders with 10+ years of experience in treating Parkinson\'s disease and essential tremor.', // 模拟数据
+    phone: '555-123-4567', // Mock data
+    jobTitle: 'Neurologist', // Mock data
+    bio: 'Specialized in movement disorders with 10+ years of experience in treating Parkinson\'s disease and essential tremor.', // Mock data
   });
   
   // Notification settings state
