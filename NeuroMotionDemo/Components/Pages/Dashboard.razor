@@ -2,10 +2,12 @@
 @rendermode InteractiveServer
 @using System.Text.Json
 @using NeuroMotionDemo.Services
+@using Microsoft.Extensions.Options
 @inject DashboardStateService StateService
 @inject MqttService MqttService
 @inject TrendDataService TrendDataService
 @implements IDisposable
+@inject IOptions<MqttConfig> MqttOptions
 
 <PageTitle>NeuroMotion Dashboard</PageTitle>
 
