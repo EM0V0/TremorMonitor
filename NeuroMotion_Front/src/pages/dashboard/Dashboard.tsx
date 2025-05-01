@@ -4,12 +4,20 @@ import TremorChart from '@/components/charts/TremorChart';
 import StatCard from '@/components/StatCard';
 import PatientRow, { Patient, PatientStatus } from '@/components/PatientRow';
 import Tab from '@/components/Tab';
+import { sensorService } from '@/services/api';
 
 // Main Dashboard component
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('realtime');
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>('PAT-4392'); // Default selection
+  
+  // Sensor data state
+  const [sensorData, setSensorData] = useState<{timestamps: string[], values: number[]}>({
+    timestamps: [],
+    values: []
+  });
+  const [isLoadingSensorData, setIsLoadingSensorData] = useState(false);
   
   // Search and filter state
   const [searchTerm, setSearchTerm] = useState('');
@@ -94,15 +102,62 @@ const Dashboard: React.FC = () => {
     // In a real app, this would also fetch detailed patient data from an API
   };
   
+  // Fetch sensor data based on active tab
   useEffect(() => {
-    // In real application, would set up data fetching or WebSocket here
-    const timer = setInterval(() => {
-      // Simulate data updates
-      console.log('Updating real-time data...');
-    }, 5000);
+    const fetchSensorData = async () => {
+      setIsLoadingSensorData(true);
+      try {
+        // Get simulated data for now - in production this would use actual patient ID
+        const response = await sensorService.getSimulatedData();
+        
+        // Format data for chart consumption
+        const timestamps = response.map((item: any) => {
+          const date = new Date(item.currentTime);
+          return date.toLocaleTimeString();
+        });
+        
+        const values = response.map((item: any) => item.tremorPower);
+        
+        // Limit to 10 data points for better visualization
+        const dataPointCount = 10;
+        const step = Math.max(1, Math.floor(timestamps.length / dataPointCount));
+        
+        const limitedTimestamps = [];
+        const limitedValues = [];
+        
+        // Select evenly distributed points
+        for (let i = 0; i < timestamps.length && limitedTimestamps.length < dataPointCount; i += step) {
+          limitedTimestamps.push(timestamps[i]);
+          limitedValues.push(values[i]);
+        }
+        
+        // Reverse to show newer data on left (current time)
+        setSensorData({
+          timestamps: limitedTimestamps.reverse(),
+          values: limitedValues.reverse()
+        });
+      } catch (error) {
+        console.error('Error fetching sensor data:', error);
+      } finally {
+        setIsLoadingSensorData(false);
+      }
+    };
     
-    return () => clearInterval(timer);
-  }, []);
+    fetchSensorData();
+    
+    // Set up polling interval for real-time data
+    let intervalId: number | null = null;
+    
+    if (activeTab === 'realtime') {
+      intervalId = window.setInterval(fetchSensorData, 10000); // Poll every 10 seconds for real-time view
+    }
+    
+    return () => {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [activeTab, selectedPatientId]);
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -199,15 +254,28 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
           
-          <div className="p-6">
-            <TremorChart activeTab={activeTab} />
+          <div className="p-6 relative">
+            {isLoadingSensorData && (
+              <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center z-10">
+                <div className="animate-pulse flex space-x-2">
+                  <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+                  <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+                  <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+                </div>
+              </div>
+            )}
+            <TremorChart activeTab={activeTab} data={sensorData} />
           </div>
           
           <div className="border-t border-gray-200 p-4 bg-gray-50">
             <div className="flex justify-between items-center">
               <div>
                 <span className="text-sm font-medium text-gray-500">Current Tremor Score</span>
-                <p className="text-lg font-semibold text-gray-800">{patientDetails.tremorScore}</p>
+                <p className="text-lg font-semibold text-gray-800">
+                  {sensorData.values.length > 0 
+                    ? Math.round(sensorData.values[0] * 10) / 10 
+                    : patientDetails.tremorScore}
+                </p>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-500">Change</span>

@@ -179,4 +179,15 @@ export const api = {
     apiInstance.delete(url, config).then((response: AxiosResponse<T>) => response.data),
 };
 
+// Sensor data service for handling sensor-related API calls
+export const sensorService = {
+  // Get sensor data for a specific user
+  getUserSensorData: (userId: number) => 
+    api.get(`/sensordata/${userId}`),
+    
+  // Get simulated sensor data for testing
+  getSimulatedData: () => 
+    api.get('/sensordata/simulated')
+};
+
 export default api; 
