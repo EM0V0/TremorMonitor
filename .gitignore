@@ -195,4 +195,6 @@ project.assets.json
 NeuroMotionDemo/Components/Pages/Shared/
 # Secrets config
 appsettings.Development.json
+# certificate files
+/certs/*
 
