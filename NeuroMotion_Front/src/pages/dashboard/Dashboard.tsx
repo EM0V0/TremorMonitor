@@ -6,6 +6,23 @@ import PatientRow, { Patient, PatientStatus } from '@/components/PatientRow';
 import Tab from '@/components/Tab';
 import { sensorService } from '@/services/api';
 
+// Define interface for different time views data
+interface TimeFormattedData {
+  timestamps: string[];
+  values: number[];
+  originalDates?: Date[];
+}
+
+// Activity Level calculation standards
+const ACTIVITY_LEVELS = {
+  LOW: { max: 30, label: 'Low' },
+  MEDIUM: { min: 30, max: 70, label: 'Medium' },
+  HIGH: { min: 70, label: 'High' },
+};
+
+// Days of the week for proper date display
+const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 // Main Dashboard component
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -13,10 +30,19 @@ const Dashboard: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>('PAT-4392'); // Default selection
   
   // Sensor data state
-  const [sensorData, setSensorData] = useState<{timestamps: string[], values: number[]}>({
+  const [sensorData, setSensorData] = useState<TimeFormattedData>({
     timestamps: [],
-    values: []
+    values: [],
+    originalDates: []
   });
+  
+  // Change and Activity Level states
+  const [tremor, setTremor] = useState({
+    currentScore: 0,
+    change: 0,
+    activityLevel: 'Medium'
+  });
+  
   const [isLoadingSensorData, setIsLoadingSensorData] = useState(false);
   
   // Search and filter state
@@ -101,41 +127,56 @@ const Dashboard: React.FC = () => {
     setSelectedPatientId(id);
     // In a real app, this would also fetch detailed patient data from an API
   };
-  
+
+  // Calculate tremor metrics based on current data
+  const updateTremorMetrics = (data: TimeFormattedData) => {
+    if (!data.values || data.values.length === 0) return;
+    
+    // Current score is the most recent data point
+    const currentScore = data.values[0];
+    
+    // Calculate change compared to average
+    const otherValues = data.values.slice(1);
+    let change = 0;
+    
+    if (otherValues.length > 0) {
+      const average = otherValues.reduce((sum, val) => sum + val, 0) / otherValues.length;
+      change = Number((currentScore - average).toFixed(1));
+    }
+    
+    // Determine activity level
+    let activityLevel = 'Medium';
+    if (currentScore < ACTIVITY_LEVELS.LOW.max) {
+      activityLevel = ACTIVITY_LEVELS.LOW.label;
+    } else if (currentScore >= ACTIVITY_LEVELS.MEDIUM.min && currentScore < ACTIVITY_LEVELS.MEDIUM.max) {
+      activityLevel = ACTIVITY_LEVELS.MEDIUM.label;
+    } else if (currentScore >= ACTIVITY_LEVELS.HIGH.min) {
+      activityLevel = ACTIVITY_LEVELS.HIGH.label;
+    }
+    
+    // Update state
+    setTremor({
+      currentScore: Math.round(currentScore * 10) / 10, // Round to one decimal place
+      change,
+      activityLevel
+    });
+  };
+
   // Fetch sensor data based on active tab
   useEffect(() => {
     const fetchSensorData = async () => {
       setIsLoadingSensorData(true);
       try {
-        // Get simulated data for now - in production this would use actual patient ID
-        const response = await sensorService.getSimulatedData();
+        // Use enhanced sensorService to get data
+        // For demo purposes, use the mock data generator rather than real API calls
+        const mockData = sensorService.generateMockData(50, activeTab as any);
         
-        // Format data for chart consumption
-        const timestamps = response.map((item: any) => {
-          const date = new Date(item.currentTime);
-          return date.toLocaleTimeString();
-        });
+        // Process data according to active tab
+        const formattedData = sensorService.formatChartData(mockData, activeTab as any);
+        setSensorData(formattedData);
         
-        const values = response.map((item: any) => item.tremorPower);
-        
-        // Limit to 10 data points for better visualization
-        const dataPointCount = 10;
-        const step = Math.max(1, Math.floor(timestamps.length / dataPointCount));
-        
-        const limitedTimestamps = [];
-        const limitedValues = [];
-        
-        // Select evenly distributed points
-        for (let i = 0; i < timestamps.length && limitedTimestamps.length < dataPointCount; i += step) {
-          limitedTimestamps.push(timestamps[i]);
-          limitedValues.push(values[i]);
-        }
-        
-        // Reverse to show newer data on left (current time)
-        setSensorData({
-          timestamps: limitedTimestamps.reverse(),
-          values: limitedValues.reverse()
-        });
+        // Update metrics
+        updateTremorMetrics(formattedData);
       } catch (error) {
         console.error('Error fetching sensor data:', error);
       } finally {
@@ -243,7 +284,7 @@ const Dashboard: React.FC = () => {
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <div className="border-b border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2 md:mb-0">{patientDetails.name}'s Tremor Activity</h3>
+              <h3 className="text-lg font-medium text-gray-700 mb-2 md:mb-0">{allPatients.find(p => p.id === selectedPatientId)?.name || 'Patient'}'s Tremor Activity</h3>
               
               <div className="flex border-b">
                 <Tab id="realtime" label="Real-time" active={activeTab === 'realtime'} onClick={setActiveTab} />
@@ -272,18 +313,18 @@ const Dashboard: React.FC = () => {
               <div>
                 <span className="text-sm font-medium text-gray-500">Current Tremor Score</span>
                 <p className="text-lg font-semibold text-gray-800">
-                  {sensorData.values.length > 0 
-                    ? Math.round(sensorData.values[0] * 10) / 10 
-                    : patientDetails.tremorScore}
+                  {tremor.currentScore}
                 </p>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-500">Change</span>
-                <p className="text-lg font-semibold text-red-500">{patientDetails.tremorTrend}</p>
+                <p className={`text-lg font-semibold ${tremor.change > 0 ? 'text-red-500' : tremor.change < 0 ? 'text-green-500' : 'text-gray-500'}`}>
+                  {tremor.change > 0 ? `+${tremor.change}` : tremor.change}
+                </p>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-500">Activity Level</span>
-                <p className="text-lg font-semibold text-gray-800">{patientDetails.activityLevel}</p>
+                <p className="text-lg font-semibold text-gray-800">{tremor.activityLevel}</p>
               </div>
               <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded transition-colors duration-150">
                 View Details
