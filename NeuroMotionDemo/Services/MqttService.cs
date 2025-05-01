@@ -1,40 +1,38 @@
-﻿using MQTTnet;
-using MQTTnet.Client;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Authentication;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Protocol;
+using NeuroMotionDemo.Models;
 
 namespace NeuroMotionDemo.Services
 {
     public class MqttService : IDisposable
     {
+        private readonly MqttConfig _config;
         private IMqttClient? _mqttClient;
-        private bool _disposed = false;
+        private bool _disposed;
         private string _brokerHost = "";
         private int _brokerPort = 8883;
 
-        // Track subscribers for reconnection
-        private List<EventHandler<SensorDataEventArgs>> _subscribers = new();
-
-        // Private backing field for the event
+        // Persist subscribers for reconnect
+        private readonly List<EventHandler<SensorDataEventArgs>> _subscribers = new();
         private event EventHandler<SensorDataEventArgs>? _dataReceived;
 
-        public MqttService()
-        {
-            // No need to initialize here since we're using the backing field
-        }
-
-        // Public event with custom add/remove
         public event EventHandler<SensorDataEventArgs> DataReceived
         {
             add
             {
-                // Store subscribers to reconnect them if needed
                 if (!_subscribers.Contains(value))
-                {
                     _subscribers.Add(value);
-                }
                 _dataReceived += value;
             }
             remove
@@ -44,230 +42,159 @@ namespace NeuroMotionDemo.Services
             }
         }
 
-        // Used when navigating between pages to restore event handlers
-        public void ReconnectEventHandlers()
-        {
-            _dataReceived = null; // Clear current handlers
-            foreach (var handler in _subscribers)
-            {
-                _dataReceived += handler;
-            }
-        }
-
-        // Track connection state
         public bool IsConnected => _mqttClient?.IsConnected ?? false;
 
-        public async Task ConnectAsync(string brokerHost, int brokerPort = 8883)
+        public MqttService(IOptions<MqttConfig> config)
         {
-            // Store connection parameters for reconnecting if needed
-            _brokerHost = brokerHost;
-            _brokerPort = brokerPort;
-
-            try
-            {
-                Console.WriteLine($"Connecting to MQTT broker at {brokerHost}:{brokerPort}");
-
-                // Create a new client if needed
-                if (_mqttClient == null || _mqttClient.IsConnected == false)
-                {
-                    var factory = new MqttFactory();
-                    _mqttClient = factory.CreateMqttClient();
-
-                    // Set up reconnection handler
-                    _mqttClient.DisconnectedAsync += async (e) =>
-                    {
-                        Console.WriteLine("MQTT client disconnected. Attempting to reconnect...");
-                        await Task.Delay(TimeSpan.FromSeconds(5));
-                        try
-                        {
-                            await ConnectClientAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Reconnection failed: {ex.Message}");
-                        }
-                    };
-                }
-
-                await ConnectClientAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"MQTT connection error: {ex.Message}");
-                throw;
-            }
+            _config = config.Value;
         }
 
+        /// <summary>
+        /// Re-attach saved event handlers after reconnect
+        /// </summary>
+        public void ReconnectEventHandlers()
+        {
+            _dataReceived = null;
+            foreach (var handler in _subscribers)
+                _dataReceived += handler;
+        }
+
+        /// <summary>
+        /// Entry point to connect (or reconnect) to broker
+        /// </summary>
+        public async Task ConnectAsync(string? brokerHost = null, int? brokerPort = null)
+        {
+            _brokerHost = brokerHost ?? _config.DefaultBrokerHost;
+            _brokerPort = brokerPort ?? _config.DefaultBrokerPort;
+
+            if (_mqttClient == null || !_mqttClient.IsConnected)
+            {
+                var factory = new MqttFactory();
+                _mqttClient = factory.CreateMqttClient();
+
+                // auto-reconnect on disconnect
+                _mqttClient.DisconnectedAsync += async _ =>
+                {
+                    Console.WriteLine("MQTT disconnected—waiting 5s to reconnect...");
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    await ConnectClientAsync();
+                };
+            }
+
+            await ConnectClientAsync();
+        }
+
+        /// <summary>
+        /// Builds TLS options, credentials, subscribes & registers handlers
+        /// </summary>
         private async Task ConnectClientAsync()
         {
-            try
+            // resolve cert paths
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var caPath = Path.Combine(baseDir, _config.Certificates.CaCertPath);
+            var pfxPath = Path.Combine(baseDir, _config.Certificates.ClientCertPath);
+
+            if (!File.Exists(caPath))
+                throw new FileNotFoundException("CA certificate missing", caPath);
+            if (!File.Exists(pfxPath))
+                throw new FileNotFoundException("Client PFX missing", pfxPath);
+
+            // load CA & client certs
+            var caCert = new X509Certificate2(caPath);
+            var pfxPwd = _config.Certificates.ClientCertPassword
+                         ?? throw new InvalidOperationException("ClientCertPassword not set");
+            var clientCert = new X509Certificate2(
+                pfxPath, pfxPwd,
+                X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);
+
+            // credentials
+            var user = _config.Credentials.Username
+                       ?? throw new InvalidOperationException("MQTT username not set");
+            var pass = _config.Credentials.Password
+                       ?? throw new InvalidOperationException("MQTT password not set");
+
+            // TLS parameters with custom CA trust
+            var tlsParams = new MqttClientOptionsBuilderTlsParameters
             {
-                // Define certificate paths
-                string caCertPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "certs", "mosquitto-ca.crt");
-                string clientPfxPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "certs", "dashboard-client.pfx");
-
-                // Check if certificate files exist
-                if (!File.Exists(caCertPath))
+                UseTls = true,
+                SslProtocol = SslProtocols.Tls13,
+                Certificates = new[] { clientCert },
+                CertificateValidationHandler = ctx =>
                 {
-                    Console.WriteLine($"CA certificate not found at: {caCertPath}");
-                    throw new FileNotFoundException("CA certificate not found", caCertPath);
-                }
-
-                if (!File.Exists(clientPfxPath))
-                {
-                    Console.WriteLine($"Client PFX certificate not found at: {clientPfxPath}");
-                    throw new FileNotFoundException("Client PFX certificate not found", clientPfxPath);
-                }
-
-                Console.WriteLine("Loading certificates...");
-
-                // Load the CA certificate
-                var caCert = new X509Certificate2(caCertPath);
-
-                // Load the client certificate from PFX with private key
-                var clientCert = new X509Certificate2(
-                    clientPfxPath,
-                    "d4r361de",  // Password used when creating the PFX
-                    X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet
-                );
-
-                Console.WriteLine($"Loaded client certificate: {clientCert.Subject}");
-
-                // Create certificate collection
-                var clientCertificates = new List<X509Certificate>() { clientCert };
-
-                // Get credentials from environment variables or use defaults
-                string username = Environment.GetEnvironmentVariable("MQTT_USERNAME") ?? "mqttuser";
-                string password = Environment.GetEnvironmentVariable("MQTT_PASSWORD") ?? "d4r361de";
-
-                var options = new MqttClientOptionsBuilder()
-                    .WithClientId($"NeuroMotionDemo_{Guid.NewGuid()}")
-                    .WithTcpServer(_brokerHost, _brokerPort) // Using hostname instead of IP
-                    .WithCredentials(username, password)
-                    .WithTls(new MqttClientOptionsBuilderTlsParameters
+                    var chain = new X509Chain
                     {
-                        UseTls = true,
-                        SslProtocol = SslProtocols.Tls13,
-                        Certificates = clientCertificates,
-                        // For Tailscale, we need to handle the hostname validation
-                        CertificateValidationHandler = (certContext) =>
+                        ChainPolicy =
                         {
-                            try
-                            {
-                                if (certContext.Certificate == null)
-                                {
-                                    Console.WriteLine("Server did not provide a certificate");
-                                    return false;
-                                }
-
-                                // Validate server certificate against our CA
-                                var chain = new X509Chain();
-                                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-                                chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-                                // These two lines are critical for custom CA certificates
-                                chain.ChainPolicy.CustomTrustStore.Add(caCert);
-                                chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-
-                                var serverCert = new X509Certificate2(certContext.Certificate);
-
-                                // Log certificate details for debugging
-                                Console.WriteLine($"Server certificate subject: {serverCert.Subject}");
-                                Console.WriteLine($"Server certificate issuer: {serverCert.Issuer}");
-
-                                var isValid = chain.Build(serverCert);
-
-                                if (!isValid)
-                                {
-                                    Console.WriteLine("Certificate validation failed");
-                                    foreach (var status in chain.ChainStatus)
-                                    {
-                                        Console.WriteLine($"Chain error: {status.StatusInformation}");
-                                    }
-
-                                    // For Tailscale testing, you might want to return true even with validation issues
-                                    // But in production, this should return false for security
-                                    return false;
-                                }
-
-                                // Check if certificate is valid for the hostname
-                                // This is important when using Tailscale DNS names
-                                if (_brokerHost.EndsWith(".ts.net"))
-                                {
-                                    Console.WriteLine($"Validating certificate for Tailscale host: {_brokerHost}");
-                                    // For Tailscale, we might need more flexible hostname validation
-                                }
-
-                                Console.WriteLine("Server certificate validated successfully");
-                                return true;
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Certificate validation error: {ex.Message}");
-                                return false;
-                            }
+                            RevocationMode    = X509RevocationMode.NoCheck,
+                            VerificationFlags = X509VerificationFlags.NoFlag,
+                            CustomTrustStore  = { caCert },
+                            TrustMode         = X509ChainTrustMode.CustomRootTrust
                         }
-                    })
-                    .WithCleanSession()
-                    .Build();
-
-                Console.WriteLine($"Connecting to MQTT broker at {_brokerHost}:{_brokerPort}");
-                await _mqttClient!.ConnectAsync(options, CancellationToken.None);
-                Console.WriteLine("Connected to MQTT broker successfully");
-
-                // Subscribe to topics after successful connection
-                var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
-                    .WithTopicFilter(builder => builder.WithTopic("parkinsons/tremor/#").WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce))
-                    .Build();
-
-                await _mqttClient.SubscribeAsync(subscribeOptions, CancellationToken.None);
-                Console.WriteLine("Subscribed to parkinsons/tremor/#");
-
-                // Register message handler only once
-                _mqttClient.ApplicationMessageReceivedAsync += HandleMessageReceived;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"MQTT connection error: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    };
+                    var server = new X509Certificate2(ctx.Certificate!);
+                    if (!chain.Build(server))
+                    {
+                        foreach (var s in chain.ChainStatus)
+                            Console.WriteLine($"Chain error: {s.StatusInformation}");
+                        return false;
+                    }
+                    return true;
                 }
-                throw;
-            }
+            };
+
+            // build client options
+            var options = new MqttClientOptionsBuilder()
+                .WithClientId($"NeuroMotion_{Guid.NewGuid()}")
+                .WithTcpServer(_brokerHost, _brokerPort)
+                .WithCredentials(user, pass)
+                .WithTls(tlsParams)
+                .WithCleanSession()
+                .Build();
+
+            Console.WriteLine($"Connecting to {_brokerHost}:{_brokerPort}...");
+            await _mqttClient!.ConnectAsync(options, CancellationToken.None);
+            Console.WriteLine("MQTT connected.");
+
+            // subscribe
+            var topicFilter = new MqttTopicFilterBuilder()
+                .WithTopic("parkinsons/tremor/#")
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                .Build();
+
+            await _mqttClient.SubscribeAsync(topicFilter, CancellationToken.None);
+            Console.WriteLine("Subscribed to parkinsons/tremor/#");
+
+            // ensure single handler
+            _mqttClient.ApplicationMessageReceivedAsync -= HandleMessageReceived;
+            _mqttClient.ApplicationMessageReceivedAsync += HandleMessageReceived;
         }
 
-        // Only one implementation of HandleMessageReceived
+        /// <summary>
+        /// Parses JSON payload and raises DataReceived
+        /// </summary>
         private Task HandleMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             try
             {
                 var payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-                var topic = e.ApplicationMessage.Topic;
+                if (string.IsNullOrWhiteSpace(payload))
+                    return Task.CompletedTask;
 
-                Console.WriteLine($"Payload content: {payload.Substring(0, Math.Min(100, payload.Length))}...");
-
-                if (string.IsNullOrEmpty(payload)) return Task.CompletedTask;
-
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var data = JsonSerializer.Deserialize<Dictionary<string, object>>(payload, options);
-                Console.WriteLine($"Deserialized {data?.Count ?? 0} data items");
-
+                var data = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    payload,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                );
 
                 if (data != null)
-                {
-                    // Use the backing field with null check
                     _dataReceived?.Invoke(this, new SensorDataEventArgs
                     {
-                        Topic = topic,
+                        Topic = e.ApplicationMessage.Topic,
                         Data = data
                     });
-                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing message: {ex.Message}");
-
-
+                Console.WriteLine($"Error handling message: {ex.Message}");
             }
 
             return Task.CompletedTask;

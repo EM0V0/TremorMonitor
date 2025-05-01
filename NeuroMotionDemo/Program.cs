@@ -1,6 +1,8 @@
 using NeuroMotionDemo.Components;
 using NeuroMotionDemo.Services;
 using NeuroMotionDemo.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Configure MQTT options from appsettings.json
+builder.Services
+    .Configure<MqttConfig>(builder.Configuration.GetSection("MqttConfig"))
+    .AddSingleton<MqttService>();
+
 
 // Register our custom services
 builder.Services.AddSingleton<DashboardStateService>();
@@ -36,5 +44,4 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
 app.Run();
