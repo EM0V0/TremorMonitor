@@ -5,6 +5,7 @@ interface TremorChartProps {
   data?: {
     timestamps: string[];
     values: number[];
+    originalDates?: Date[];
   };
   height?: number;
 }
@@ -14,6 +15,7 @@ interface TremorChartProps {
  * 
  * A reusable chart component for displaying tremor data in different time intervals
  * Can use real sensor data or generate mock data when real data is not available
+ * Supports different time views: realtime, hourly, daily, weekly
  */
 const TremorChart: React.FC<TremorChartProps> = ({ 
   activeTab, 
@@ -37,82 +39,144 @@ const TremorChart: React.FC<TremorChartProps> = ({
     setTooltipInfo(null);
   };
   
-  // Get time labels based on active tab or real data
-  const getTimeLabels = () => {
-    // If real data is available, use its timestamps
-    if (data && data.timestamps.length > 0) {
-      // Format timestamps based on activeTab if needed
-      if (activeTab === 'realtime') {
-        return data.timestamps.map(ts => ts.split(' ')[1]); // Only show time part
-      }
-      return data.timestamps;
-    }
-    
-    // Fallback to mock time labels
-    switch (activeTab) {
-      case 'realtime':
-        return ['Now', '-10s', '-20s', '-30s', '-40s', '-50s', '-60s'];
-      case 'hourly':
-        return ['Now', '-1h', '-2h', '-3h', '-4h', '-5h', '-6h'];
-      case 'daily':
-        return ['Today', 'Yesterday', '-2d', '-3d', '-4d', '-5d', '-6d'];
-      case 'weekly':
-        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      default:
-        return ['Now', '-10s', '-20s', '-30s', '-40s', '-50s', '-60s'];
-    }
-  };
-
   // Generate data points for the chart - from real data or mock data
   const generateDataPoints = () => {
+    // Determine min and max for proper scaling
+    const getMinMaxValues = () => {
+      if (data && data.values.length > 0) {
+        return {
+          minValue: Math.min(...data.values),
+          maxValue: Math.max(...data.values)
+        };
+      }
+      return { minValue: 0, maxValue: 100 }; // Default range if no data
+    };
+
+    const { minValue, maxValue } = getMinMaxValues();
+    
+    // SVG y-axis is inverted (0 at top, higher values go down)
+    // Map data values to SVG coordinate space (0-30)
+    const mapValueToY = (value: number) => {
+      // Scale factor to match the Y-axis compression
+      const scaleFactor = 0.7; // Also scale down to 70% to match axis
+      const scaledValue = value / scaleFactor;
+      
+      // Create a padding of 10% at top and bottom
+      const adjustedMax = Math.max(maxValue * (1/scaleFactor), 100);
+      const padding = (adjustedMax - minValue) * 0.1;
+      const paddedMin = Math.max(0, minValue - padding);
+      const paddedMax = adjustedMax + padding;
+      
+      // 5 is top padding, 25 is available height
+      return 5 + 25 * (1 - (scaledValue - paddedMin) / (paddedMax - paddedMin || 1));
+    };
+    
     // If real data is available, use it
     if (data && data.values.length > 0) {
-      const maxValue = Math.max(...data.values);
-      const scaleFactor = maxValue > 0 ? 20 / maxValue : 1; // Scale to fit chart height
+      // Limit to 10 data points for better visualization
+      const maxPoints = 10;
+      const step = data.values.length > maxPoints ? Math.floor(data.values.length / maxPoints) : 1;
+      const filteredValues: number[] = [];
+      const filteredTimestamps: string[] = [];
       
-      return data.values.map((value, index) => ({
-        x: 100 - (index * (100 / (data.values.length - 1))), // Distribute evenly on x-axis
-        y: 25 - (value * scaleFactor), // Scale to fit in chart, flipped for SVG coords
-        originalValue: value,
-        timestamp: data.timestamps[index]
-      }));
+      // Sample data points at regular intervals
+      for (let i = 0; i < data.values.length; i += step) {
+        if (filteredValues.length < maxPoints) {
+          filteredValues.push(data.values[i]);
+          filteredTimestamps.push(data.timestamps[i]);
+        }
+      }
+      
+      return filteredValues.map((value, index) => {
+        // For SVG, x=0 is left, x=100 is right (horizontal direction is reversed for time series)
+        const x = 100 - (index * (100 / (filteredValues.length - 1 || 1))); 
+        return {
+          x: x,
+          y: mapValueToY(value), // Map to SVG coordinates
+          originalValue: value,
+          timestamp: filteredTimestamps[index]
+        };
+      });
     }
     
     // In SVG coordinate system, smaller y values represent higher positions
-    // Keep y values in a range of 5-25 to ensure chart is visible
+    // Generate mock data based on active tab
     const points = [];
-    const mockTimestamps = getTimeLabels();
     
-    switch(activeTab) {
-      case 'realtime':
-        // Adjust y values to prevent excessive curve bending
-        points.push({ x: 0, y: 15, originalValue: 5.2, timestamp: mockTimestamps[0] });   // Now
-        points.push({ x: 20, y: 10, originalValue: 7.8, timestamp: mockTimestamps[1] });  // -10s
-        points.push({ x: 40, y: 5, originalValue: 9.5, timestamp: mockTimestamps[2] });   // -20s
-        points.push({ x: 60, y: 20, originalValue: 3.1, timestamp: mockTimestamps[3] });  // -30s
-        points.push({ x: 80, y: 10, originalValue: 7.7, timestamp: mockTimestamps[4] });  // -40s
-        points.push({ x: 100, y: 15, originalValue: 5.3, timestamp: mockTimestamps[5] }); // -50s
-        break;
-      case 'hourly':
-        points.push({ x: 0, y: 12, originalValue: 6.5, timestamp: mockTimestamps[0] });
-        points.push({ x: 20, y: 8, originalValue: 8.4, timestamp: mockTimestamps[1] });
-        points.push({ x: 40, y: 15, originalValue: 4.8, timestamp: mockTimestamps[2] });
-        points.push({ x: 60, y: 5, originalValue: 9.8, timestamp: mockTimestamps[3] });
-        points.push({ x: 80, y: 12, originalValue: 6.4, timestamp: mockTimestamps[4] });
-        points.push({ x: 100, y: 10, originalValue: 7.6, timestamp: mockTimestamps[5] });
-        break;
-      case 'daily':
-      case 'weekly':
-        points.push({ x: 0, y: 10, originalValue: 7.5, timestamp: mockTimestamps[0] });
-        points.push({ x: 20, y: 8, originalValue: 8.5, timestamp: mockTimestamps[1] });
-        points.push({ x: 40, y: 12, originalValue: 6.3, timestamp: mockTimestamps[2] });
-        points.push({ x: 60, y: 9, originalValue: 8.0, timestamp: mockTimestamps[3] });
-        points.push({ x: 80, y: 11, originalValue: 7.0, timestamp: mockTimestamps[4] });
-        points.push({ x: 100, y: 10, originalValue: 7.5, timestamp: mockTimestamps[5] });
-        break;
+    // Generate appropriate timestamps for each tab type
+    const mockTimestamps = generateMockTimestamps(activeTab);
+    
+    // Generate Y values with natural variation
+    const yValues = generateYValues(activeTab);
+    
+    // Create data points with proper distribution
+    for (let i = 0; i < yValues.length; i++) {
+      points.push({
+        x: 100 - (i * (100 / (yValues.length - 1))),
+        y: mapValueToY(yValues[i]), // Map mock values to SVG coordinates
+        originalValue: yValues[i],
+        timestamp: mockTimestamps[i] || `${i} units ago`
+      });
     }
     
     return points;
+  };
+  
+  // Generate mock timestamps based on active tab
+  const generateMockTimestamps = (tab: string) => {
+    const now = new Date();
+    
+    switch(tab) {
+      case 'realtime':
+        return Array(6).fill(0).map((_, i) => {
+          const time = new Date(now.getTime() - i * 10000); // 10 seconds intervals
+          return time.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        });
+      
+      case 'hourly':
+        return Array(6).fill(0).map((_, i) => {
+          const time = new Date(now.getTime() - i * 3600000); // 1 hour intervals
+          return time.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
+        });
+      
+      case 'daily':
+        return Array(6).fill(0).map((_, i) => {
+          const date = new Date(now.getTime() - i * 86400000); // 1 day intervals
+          return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+        });
+      
+      case 'weekly':
+        return Array(6).fill(0).map((_, i) => {
+          const date = new Date(now.getTime() - i * 604800000); // 1 week intervals
+          return date.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'});
+        });
+      
+      default:
+        return Array(6).fill('');
+    }
+  };
+  
+  // Generate Y values with natural variations for mock data
+  const generateYValues = (tab: string) => {
+    // Base values with natural fluctuations
+    let baseValue = 60; // Center around 60 for better visualization
+    const values: number[] = [];
+    
+    for (let i = 0; i < 6; i++) {
+      // Add some randomness but maintain a trend
+      const variation = Math.sin(i * 0.8) * 15 + (Math.random() * 10 - 5);
+      const value = Math.max(10, Math.min(90, baseValue + variation));
+      values.push(value);
+      
+      // Adjust base value to create a slight trend
+      if (tab === 'realtime') {
+        baseValue += 3 * (Math.random() - 0.5);
+      } else {
+        baseValue += 2 * (Math.random() - 0.5);
+      }
+    }
+    
+    return values;
   };
   
   // Create bezier curve path with optimized control points
@@ -173,26 +237,56 @@ const TremorChart: React.FC<TremorChartProps> = ({
   const getYAxisLabels = () => {
     if (data && data.values.length > 0) {
       const maxValue = Math.max(...data.values);
-      const roundedMax = Math.ceil(maxValue / 10) * 10; // Round up to nearest 10
-      const step = roundedMax / 5;
+      const minValue = Math.min(...data.values);
       
+      // Add padding to the range and compress scale to about 70% of original
+      const scaleFactor = 0.7; // Scale down to 70% of the original
+      const adjustedMax = Math.max(maxValue * (1/scaleFactor), 100); // Ensure scale can display up to 100
+      const padding = (adjustedMax - minValue) * 0.1;
+      const paddedMin = Math.max(0, Math.floor((minValue - padding) / 10) * 10);
+      const paddedMax = Math.ceil((adjustedMax + padding) / 10) * 10;
+      const range = paddedMax - paddedMin;
+      
+      // Calculate step size for 6 labels
+      const step = range / 5;
+      
+      // Generate evenly spaced labels
       return Array.from({ length: 6 }).map((_, i) => 
-        Math.round((roundedMax - i * step) * 10) / 10
+        Math.round(paddedMax - i * step)
       );
     }
     
-    // Default labels
-    return [10, 8, 6, 4, 2, 0];
+    // Default labels for mock data - scaled down
+    return [150, 120, 90, 60, 30, 0];
   };
 
-  // Get x axis values for realtime mode
+  // Get x axis values based on active tab
   const getXAxisValues = () => {
-    if (activeTab !== 'realtime') return null;
-    
-    return Array.from({ length: 5 }).map((_, i) => {
-      const value = i * 15; // 0s, 15s, 30s, 45s, 60s
-      return `${value}s`;
-    });
+    switch (activeTab) {
+      case 'realtime':
+        // For real-time view, show time in seconds from now
+        return Array.from({ length: 6 }).map((_, i) => {
+          return `${i * 12}s`;
+        });
+      case 'hourly':
+        // For hourly view, show hours
+        return Array.from({ length: 6 }).map((_, i) => {
+          const value = i * 1.2; // Distributes 0h to 6h across the axis
+          return `${value.toFixed(1)}h`;
+        });
+      case 'daily':
+        // For daily view, show days
+        return Array.from({ length: 6 }).map((_, i) => {
+          return `${i}d`;
+        });
+      case 'weekly':
+        // For weekly view, show weeks
+        return Array.from({ length: 6 }).map((_, i) => {
+          return `${i}w`;
+        });
+      default:
+        return Array.from({ length: 6 }).map((_, i) => `${i}`);
+    }
   };
 
   const yAxisLabels = getYAxisLabels();
@@ -213,7 +307,7 @@ const TremorChart: React.FC<TremorChartProps> = ({
         </div>
 
         {/* Chart visualization - Move chart position up */}
-        <div className="absolute inset-0 px-4 pt-20 pb-20">
+        <div className="absolute inset-0 px-4 pt-12 pb-16">
           <div className="relative h-full w-full">
             {/* Background gradient - More refined gradient */}
             <div className="absolute bottom-0 left-0 right-0 h-2/5 bg-gradient-to-t from-blue-50 to-transparent opacity-60"></div>
@@ -281,31 +375,29 @@ const TremorChart: React.FC<TremorChartProps> = ({
                 </g>
               ))}
               
-              {/* X axis for realtime view */}
-              {activeTab === 'realtime' && (
-                <g>
-                  <line 
-                    x1="0" 
-                    y1="30" 
-                    x2="100" 
-                    y2="30" 
-                    stroke="#CBD5E1" 
-                    strokeWidth="0.5"
-                  />
-                  {[0, 25, 50, 75, 100].map((pos, i) => (
-                    <g key={`x-tick-${i}`}>
-                      <line 
-                        x1={pos} 
-                        y1="30" 
-                        x2={pos} 
-                        y2="31" 
-                        stroke="#94A3B8" 
-                        strokeWidth="0.5"
-                      />
-                    </g>
-                  ))}
-                </g>
-              )}
+              {/* X axis */}
+              <g>
+                <line 
+                  x1="0" 
+                  y1="30" 
+                  x2="100" 
+                  y2="30" 
+                  stroke="#CBD5E1" 
+                  strokeWidth="0.5"
+                />
+                {[0, 20, 40, 60, 80, 100].map((pos, i) => (
+                  <g key={`x-tick-${i}`}>
+                    <line 
+                      x1={pos} 
+                      y1="30" 
+                      x2={pos} 
+                      y2="31" 
+                      stroke="#94A3B8" 
+                      strokeWidth="0.5"
+                    />
+                  </g>
+                ))}
+              </g>
             </svg>
             
             {/* Tooltip */}
@@ -333,7 +425,7 @@ const TremorChart: React.FC<TremorChartProps> = ({
             )}
             
             {/* Label for chart type */}
-            <div className="absolute top-0 right-2">
+            <div className="absolute top-0 right-2 -mt-3">
               <span className="text-xs font-medium text-gray-500 bg-white bg-opacity-75 px-2 py-1 rounded">
                 {activeTab.toUpperCase()} DATA
               </span>
@@ -341,26 +433,32 @@ const TremorChart: React.FC<TremorChartProps> = ({
           </div>
         </div>
         
-        {/* X-axis labels */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4 text-xs text-gray-500">
-          {getTimeLabels().map((label, index) => (
-            <span key={`x-label-${index}`} className="pb-1">{label}</span>
-          ))}
+        {/* X-axis time scale ticks - Fixed positioning to avoid overlap */}
+        <div className="absolute bottom-4 left-0 right-0 px-8">
+          <div className="relative h-6 w-full">
+            {xAxisValues && xAxisValues.map((value, index) => {
+              // Calculate position based on the number of values and chart width
+              const totalValues = xAxisValues.length;
+              const position = index * (100 / (totalValues - 1));
+              
+              return (
+                <div 
+                  key={`x-value-${index}`} 
+                  className="absolute -translate-x-1/2 text-xs text-gray-500"
+                  style={{ 
+                    left: `${position}%`,
+                    top: 0
+                  }}
+                >
+                  {value}
+                </div>
+              );
+            })}
+          </div>
         </div>
         
-        {/* X-axis values for realtime view */}
-        {activeTab === 'realtime' && xAxisValues && (
-          <div className="absolute bottom-4 left-0 right-0 flex justify-between px-4 text-xs text-gray-400">
-            {xAxisValues.map((value, index) => (
-              <span key={`x-value-${index}`} style={{ marginLeft: `${index * 25}%` }}>
-                {value}
-              </span>
-            ))}
-          </div>
-        )}
-        
-        {/* Y-axis labels */}
-        <div className="absolute top-4 left-2 bottom-6 flex flex-col justify-between text-xs text-gray-500">
+        {/* Y-axis labels - Improved positioning */}
+        <div className="absolute top-2 left-2 bottom-10 flex flex-col justify-between text-xs text-gray-500">
           {yAxisLabels.map((label, index) => (
             <span key={`y-label-${index}`}>{label}</span>
           ))}

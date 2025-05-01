@@ -179,15 +179,186 @@ export const api = {
     apiInstance.delete(url, config).then((response: AxiosResponse<T>) => response.data),
 };
 
-// Sensor data service for handling sensor-related API calls
+// Define sensor data interface
+interface SensorData {
+  userID: number;
+  tremorPower: number;
+  tremorIndex: number;
+  currentTime: string;
+}
+
+// Activity level thresholds for tremor data
+const ACTIVITY_THRESHOLDS = {
+  LOW: 40,
+  MEDIUM: 70
+};
+
+// Sensor data service for handling sensor-related API calls and data processing
 export const sensorService = {
   // Get sensor data for a specific user
   getUserSensorData: (userId: number) => 
-    api.get(`/sensordata/${userId}`),
+    api.get<SensorData[]>(`/sensordata/${userId}`),
     
   // Get simulated sensor data for testing
   getSimulatedData: () => 
-    api.get('/sensordata/simulated')
+    api.get<SensorData[]>('/sensordata/simulated'),
+  
+  // Format sensor data for chart display based on time range
+  formatChartData: (data: SensorData[], timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
+    if (!data || data.length === 0) {
+      return { timestamps: [], values: [], originalDates: [] };
+    }
+    
+    // Sort data by time (newest first)
+    const sortedData = [...data].sort((a, b) => 
+      new Date(b.currentTime).getTime() - new Date(a.currentTime).getTime()
+    );
+    
+    // Filter data based on time range
+    const filteredData = sensorService.filterDataByTimeRange(sortedData, timeRange);
+    
+    // Map to chart format
+    return {
+      timestamps: filteredData.map(d => sensorService.formatTimestamp(d.currentTime, timeRange)),
+      values: filteredData.map(d => d.tremorPower),
+      originalDates: filteredData.map(d => new Date(d.currentTime))
+    };
+  },
+  
+  // Filter data by time range
+  filterDataByTimeRange: (data: SensorData[], timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
+    const now = new Date();
+    let timeLimit: Date;
+    
+    switch (timeRange) {
+      case 'realtime':
+        timeLimit = new Date(now.getTime() - 60 * 1000); // Last 60 seconds
+        break;
+      case 'hourly':
+        timeLimit = new Date(now.getTime() - 6 * 60 * 60 * 1000); // Last 6 hours
+        break;
+      case 'daily':
+        timeLimit = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000); // Last 6 days
+        break;
+      case 'weekly':
+        timeLimit = new Date(now.getTime() - 6 * 7 * 24 * 60 * 60 * 1000); // Last 6 weeks
+        break;
+    }
+    
+    return data.filter(d => new Date(d.currentTime) >= timeLimit);
+  },
+  
+  // Format timestamp based on time range
+  formatTimestamp: (timestamp: string, timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
+    const date = new Date(timestamp);
+    
+    switch (timeRange) {
+      case 'realtime':
+        return date.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+      case 'hourly':
+        return date.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
+      case 'daily':
+        return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+      case 'weekly':
+        return date.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'});
+    }
+  },
+  
+  // Calculate change percentage compared to average
+  calculateChange: (currentValue: number, data: SensorData[]) => {
+    if (!data || data.length <= 1) return 0;
+    
+    // Calculate average excluding current value
+    const otherValues = data.slice(1).map(d => d.tremorPower);
+    const average = otherValues.reduce((sum, val) => sum + val, 0) / otherValues.length;
+    
+    // Calculate percentage difference
+    const change = ((currentValue - average) / average) * 100;
+    return Math.round(change * 10) / 10; // Round to 1 decimal place
+  },
+  
+  // Determine activity level based on tremor power
+  getActivityLevel: (tremorPower: number) => {
+    if (tremorPower < ACTIVITY_THRESHOLDS.LOW) {
+      return 'Low';
+    } else if (tremorPower < ACTIVITY_THRESHOLDS.MEDIUM) {
+      return 'Medium';
+    } else {
+      return 'High';
+    }
+  },
+  
+  // Generate mock data for testing when API is not available
+  generateMockData: (count: number = 50, timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
+    const now = new Date();
+    const mockData: SensorData[] = [];
+    
+    // Define time intervals based on range
+    let timeInterval: number;
+    switch (timeRange) {
+      case 'realtime':
+        timeInterval = 1000; // 1 second
+        break;
+      case 'hourly':
+        timeInterval = 60 * 1000; // 1 minute
+        break;
+      case 'daily':
+        timeInterval = 60 * 60 * 1000; // 1 hour
+        break;
+      case 'weekly':
+        timeInterval = 24 * 60 * 60 * 1000; // 1 day
+        break;
+    }
+    
+    // Create a natural pattern with more dramatic fluctuations
+    let baseValue = 60 + Math.random() * 15; // Center around 60-75
+    let trend = Math.random() > 0.5 ? 2.5 : -2.5; // Stronger trend
+    
+    // Parameters for more pronounced oscillations
+    const oscillationAmplitude = 25; // Increase amplitude for more dramatic peaks
+    const oscillationFrequency = 0.5; // Adjust frequency for more natural patterns
+    
+    for (let i = 0; i < count; i++) {
+      // Create more pronounced oscillations with multiple sine waves for complexity
+      const primaryOscillation = Math.sin(i * oscillationFrequency) * oscillationAmplitude;
+      const secondaryOscillation = Math.sin(i * oscillationFrequency * 2.7) * oscillationAmplitude * 0.4;
+      const randomNoise = (Math.random() * 15 - 7.5); // More random noise
+      
+      // Combine oscillations and noise
+      const variation = primaryOscillation + secondaryOscillation + randomNoise;
+      
+      // Add trend with more frequent trend reversals for exciting patterns
+      if (Math.random() < 0.15) { // Increase reversal frequency
+        trend *= -1.2; // More dramatic reversal
+      }
+      
+      // Apply trend with larger step size
+      baseValue += trend * (1 + Math.random());
+      
+      // Enforce range boundaries but allow higher spikes
+      baseValue = Math.max(20, Math.min(85, baseValue));
+      
+      // Calculate final tremor power with more dramatic spikes
+      let tremorPower = baseValue + variation;
+      
+      // Occasionally add dramatic spikes (about 10% of the time)
+      if (Math.random() < 0.1) {
+        tremorPower += Math.random() > 0.5 ? 15 : -15;
+      }
+      
+      // Ensure value stays within 0-100 range
+      tremorPower = Math.max(0, Math.min(100, tremorPower));
+      
+      mockData.push({
+        userID: 1,
+        tremorPower: tremorPower, 
+        tremorIndex: tremorPower * 10 + Math.random() * 50,
+        currentTime: new Date(now.getTime() - i * timeInterval).toISOString()
+      });
+    }
+    
+    return mockData;
+  }
 };
 
 export default api; 
