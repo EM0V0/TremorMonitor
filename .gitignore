@@ -193,3 +193,6 @@ project.assets.json
 /NeuroMotion API/appsettings.Development.json
 
 NeuroMotionDemo/Components/Pages/Shared/
+# Secrets config
+appsettings.Development.json
+
