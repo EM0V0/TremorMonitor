@@ -5,8 +5,43 @@ using NeuroMotion_API; // replace with the actual namespace for ApplicationDbCon
 using NeuroMotion_API.Services;
 using System.Text;
 using Microsoft.AspNetCore.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Kestrel to use HTTPS
+builder.WebHost.ConfigureKestrel(options =>
+{
+    // HTTP endpoint (optional, can be kept for development)
+    options.ListenAnyIP(5037);
+    
+    // HTTPS endpoint
+    options.ListenAnyIP(5038, listenOptions =>
+    {
+        // Get certificate path and password from environment variables or use defaults
+        var certPath = Environment.GetEnvironmentVariable("CERTIFICATE_PATH") ?? "./certs/https.pfx";
+        var certPassword = Environment.GetEnvironmentVariable("CERTIFICATE_PASSWORD") ?? "password";
+        
+        try
+        {
+            // Load PFX certificate
+            listenOptions.UseHttps(options =>
+            {
+                options.ServerCertificate = new X509Certificate2(certPath, certPassword);
+            });
+            
+            Console.WriteLine($"HTTPS configuration successful, using certificate: {certPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"HTTPS configuration failed: {ex.Message}");
+            // Will not block application startup, but HTTPS may be unavailable
+        }
+    });
+});
+
+// Register GcmCryptoService for AES-GCM encryption
+builder.Services.AddSingleton<GcmCryptoService>();
 
 // Add DbContext with connection string
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -19,10 +54,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddSingleton(provider => 
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    var secretKey = configuration["Jwt:SecretKey"];
-    var issuer = configuration["Jwt:Issuer"];
-    var audience = configuration["Jwt:Audience"];
-    var expirationMinutes = int.Parse(configuration["Jwt:ExpirationMinutes"]);
+    
+    // 添加默认值防止null引用
+    var secretKey = configuration["Jwt:SecretKey"] ?? "DefaultSecretKeyForDevelopmentOnly-PleaseChangeInProduction";
+    var issuer = configuration["Jwt:Issuer"] ?? "NeuroMotion";
+    var audience = configuration["Jwt:Audience"] ?? "NeuroMotionClients";
+    
+    // 确保expirationMinutes有一个默认值
+    var expirationMinutesStr = configuration["Jwt:ExpirationMinutes"] ?? "60";
+    var expirationMinutes = int.Parse(expirationMinutesStr);
     
     return new JwtService(secretKey, issuer, audience, expirationMinutes);
 });
@@ -40,9 +80,14 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+        ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "NeuroMotion",
+        ValidAudience = builder.Configuration["Jwt:Audience"] ?? "NeuroMotionClients",
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                builder.Configuration["Jwt:SecretKey"] ?? 
+                "DefaultSecretKeyForDevelopmentOnly-PleaseChangeInProduction"
+            )
+        )
     };
 });
 
@@ -52,9 +97,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
         policy.WithOrigins(
-                "http://localhost:3000",  // Default React port
+                "http://localhost:3000",  // HTTP React port
+                "https://localhost:3000", // HTTPS React port
                 "http://localhost:5173",  // Default Vite port
-                "http://localhost:5037"   // Custom port
+                "https://localhost:5173", // HTTPS Vite port
+                "http://localhost:5037",  // Custom port
+                "https://localhost:5038"  // HTTPS custom port
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -133,16 +181,16 @@ app.UseAuthorization();
 app.Use(async (context, next) =>
 {
     // Add security headers
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.Add("X-Frame-Options", "DENY");
-    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
-    context.Response.Headers.Add("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
     
     // Add Strict-Transport-Security header (HSTS)
     if (!context.Request.IsHttps)
     {
-        context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+        context.Response.Headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload";
     }
     
     await next();

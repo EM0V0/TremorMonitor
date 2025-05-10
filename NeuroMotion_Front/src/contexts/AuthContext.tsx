@@ -224,7 +224,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }));
       
-      // Call auth service login method
+      // Call auth service login method - pass credentials object directly
       const response = await authService.login(credentials);
       
       // Update auth state with response data

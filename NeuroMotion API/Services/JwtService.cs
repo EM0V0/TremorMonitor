@@ -48,7 +48,7 @@ namespace NeuroMotion_API.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public bool ValidateToken(string token, out ClaimsPrincipal principal)
+        public bool ValidateToken(string token, out ClaimsPrincipal? principal)
         {
             principal = null;
 
