@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import * as path from 'path'
+import * as fs from 'fs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,7 +22,28 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    host: true,
-    open: true,
+    host: 'localhost',
+    
+    // HTTPS configuration for secure local development
+    https: {
+      // Load PFX certificate (PKCS#12 format) from local filesystem
+      pfx: fs.readFileSync('./certs/https.pfx'),
+      // Password for the PFX certificate
+      passphrase: 'password' // Could also use environment variable for this
+    },
+    
+    // Proxy API requests to the backend server
+    proxy: {
+      '/api': {
+        // Forward requests to the backend HTTPS server
+        target: 'https://localhost:5038',
+        // Allow changing the Origin header to match the target
+        changeOrigin: true,
+        // Skip certificate validation for self-signed certificates in development
+        secure: false,
+      }
+    },
+    
+    open: true, // Automatically open browser on start
   },
 }) 

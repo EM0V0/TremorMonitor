@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Collections.Concurrent;
+using System.Text.Json;
 
 [ApiController]
 [Route("api/user")]
@@ -17,6 +18,7 @@ public class UserController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly JwtService _jwtService;
     private readonly ILogger<UserController> _logger;
+    private readonly GcmCryptoService _cryptoService;
     
     // Failed login attempt tracking
     private static readonly ConcurrentDictionary<string, (int Count, DateTime LastAttempt)> _failedLoginAttempts = new();
@@ -28,19 +30,89 @@ public class UserController : ControllerBase
     private const int MAX_REGISTRATIONS_PER_IP = 3;
     private static readonly TimeSpan REGISTRATION_TIMEFRAME = TimeSpan.FromHours(24);
 
-    public UserController(ApplicationDbContext context, JwtService jwtService, ILogger<UserController> logger)
+    public UserController(ApplicationDbContext context, JwtService jwtService, ILogger<UserController> logger, GcmCryptoService cryptoService)
     {
         _context = context;
         _jwtService = jwtService;
         _logger = logger;
+        _cryptoService = cryptoService;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] object request)
     {
         try
         {
-            // Check for registration rate limiting
+            // Check if the request is encrypted
+            RegisterRequest? registerRequest = null;
+            
+            if (request is JsonElement jsonElement)
+            {
+                // Try to parse as encrypted payload
+                try
+                {
+                    if (jsonElement.TryGetProperty("iv", out var ivProp) && 
+                        jsonElement.TryGetProperty("ciphertext", out var ciphertextProp) &&
+                        jsonElement.TryGetProperty("tag", out var tagProp))
+                    {
+                        _logger.LogInformation("Request has encrypted payload properties");
+                        _logger.LogInformation($"iv length: {ivProp.GetString()?.Length}, ciphertext length: {ciphertextProp.GetString()?.Length}, tag length: {tagProp.GetString()?.Length}");
+                        
+                        // Parse the encrypted payload
+                        var encryptedPayload = JsonSerializer.Deserialize<GcmCryptoService.EncryptedPayload>(
+                            jsonElement.GetRawText(),
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                        );
+                        
+                        if (encryptedPayload != null)
+                        {
+                            _logger.LogInformation("Successfully deserialized encrypted payload");
+                            _logger.LogInformation($"Iv: {encryptedPayload.Iv.Length}, Ciphertext: {encryptedPayload.Ciphertext.Length}, Tag: {encryptedPayload.Tag.Length}");
+                            
+                            // Try to decrypt the data
+                            if (_cryptoService.TryDecryptAndDeserialize<RegisterRequest>(encryptedPayload, out var decryptedRequest, _logger))
+                            {
+                                registerRequest = decryptedRequest;
+                                _logger.LogInformation("Successfully decrypted registration request data");
+                            }
+                            else
+                            {
+                                _logger.LogWarning("Failed to decrypt registration request");
+                                return BadRequest(new { message = "Unable to decrypt registration data" });
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error parsing encrypted data: {ex.Message}");
+                }
+                
+                // If not encrypted, try to parse as regular RegisterRequest
+                if (registerRequest == null)
+                {
+                    try
+                    {
+                        registerRequest = JsonSerializer.Deserialize<RegisterRequest>(
+                            jsonElement.GetRawText(),
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Error parsing registration request: {ex.Message}");
+                        return BadRequest(new { message = "Invalid registration data format" });
+                    }
+                }
+            }
+            
+            // Ensure we have a valid request
+            if (registerRequest == null)
+            {
+                return BadRequest(new { message = "Invalid registration data" });
+            }
+
+            // Check registration rate limit - use existing logic
             string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
             if (!CheckRegistrationRateLimit(ipAddress))
             {
@@ -48,30 +120,32 @@ public class UserController : ControllerBase
                 return StatusCode(429, new { message = "Registration rate limit exceeded. Please try again later." });
             }
             
+            // Continue with existing registration logic using registerRequest
+            
             // Model validation is handled by attributes
             
             // 1. Additional email format validation
             string emailPattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
-            if (!System.Text.RegularExpressions.Regex.IsMatch(request.Email, emailPattern))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(registerRequest.Email, emailPattern))
             {
                 return BadRequest(new { message = "Invalid email format" });
             }
             
             // 2. Check if user already exists with case-insensitive comparison
-            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == request.Email.ToLower()))
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == registerRequest.Email.ToLower()))
             {
                 // Don't reveal specific information about existing accounts
-                _logger.LogWarning($"Registration attempt with existing email: {request.Email} from {ipAddress}");
+                _logger.LogWarning($"Registration attempt with existing email: {registerRequest.Email} from {ipAddress}");
                 return BadRequest(new { message = "Registration failed. Please try with different information." });
             }
 
             // 3. Sanitize input - trim whitespace
-            string sanitizedName = request.Name.Trim();
-            string sanitizedEmail = request.Email.Trim().ToLower();
-            string sanitizedRole = request.Role.Trim().ToLower();
+            string sanitizedName = registerRequest.Name.Trim();
+            string sanitizedEmail = registerRequest.Email.Trim().ToLower();
+            string sanitizedRole = registerRequest.Role.Trim().ToLower();
             
             // 4. Hash password with higher work factor for stronger security
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 12);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password, workFactor: 12);
 
             // 5. Create new user
             var newUser = new User
@@ -107,8 +181,8 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            // 9. Improved error handling
-            _logger.LogError($"Registration error for {request.Email}: {ex.Message}");
+            // Improved error handling
+            _logger.LogError($"Registration error: {ex.Message}");
             
             if (ex.InnerException?.Message.Contains("duplicate", StringComparison.OrdinalIgnoreCase) == true ||
                 ex.Message.Contains("duplicate", StringComparison.OrdinalIgnoreCase))
@@ -177,20 +251,105 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] object request)
     {
         try
         {
-            // Check for brute force attacks
+            _logger.LogInformation("Login request received");
+            
+            // Check if the request is encrypted
+            LoginRequest? loginRequest = null;
+            
+            if (request is JsonElement jsonElement)
+            {
+                _logger.LogInformation("Request is JsonElement");
+                
+                // Try to parse as encrypted payload
+                try
+                {
+                    if (jsonElement.TryGetProperty("iv", out var ivProp) && 
+                        jsonElement.TryGetProperty("ciphertext", out var ciphertextProp) &&
+                        jsonElement.TryGetProperty("tag", out var tagProp))
+                    {
+                        _logger.LogInformation("Request has encrypted payload properties");
+                        _logger.LogInformation($"iv length: {ivProp.GetString()?.Length}, ciphertext length: {ciphertextProp.GetString()?.Length}, tag length: {tagProp.GetString()?.Length}");
+                        
+                        // Parse the encrypted payload
+                        var encryptedPayload = JsonSerializer.Deserialize<GcmCryptoService.EncryptedPayload>(
+                            jsonElement.GetRawText(),
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                        );
+                        
+                        if (encryptedPayload != null)
+                        {
+                            _logger.LogInformation("Successfully deserialized encrypted payload");
+                            _logger.LogInformation($"Iv: {encryptedPayload.Iv.Length}, Ciphertext: {encryptedPayload.Ciphertext.Length}, Tag: {encryptedPayload.Tag.Length}");
+                            
+                            // Try to decrypt the data
+                            try {
+                                if (_cryptoService.TryDecryptAndDeserialize<LoginRequest>(encryptedPayload, out var decryptedRequest, _logger))
+                                {
+                                    loginRequest = decryptedRequest;
+                                    _logger.LogInformation("Successfully decrypted login request data");
+                                }
+                                else
+                                {
+                                    _logger.LogWarning("Failed to decrypt login request");
+                                    return BadRequest(new { message = "Unable to decrypt login data" });
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError($"Decryption exception: {ex.Message}");
+                                _logger.LogError($"Exception type: {ex.GetType().Name}");
+                                if (ex.InnerException != null)
+                                {
+                                    _logger.LogError($"Inner exception: {ex.InnerException.Message}");
+                                }
+                                return BadRequest(new { message = "Error during decryption: " + ex.Message });
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error parsing encrypted data: {ex.Message}");
+                }
+                
+                // If not encrypted, try to parse as regular LoginRequest
+                if (loginRequest == null)
+                {
+                    try
+                    {
+                        loginRequest = JsonSerializer.Deserialize<LoginRequest>(
+                            jsonElement.GetRawText(),
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Error parsing login request: {ex.Message}");
+                        return BadRequest(new { message = "Invalid login data format" });
+                    }
+                }
+            }
+            
+            // Ensure we have a valid request
+            if (loginRequest == null)
+            {
+                return BadRequest(new { message = "Invalid login data" });
+            }
+            
+            // Check attack protection - use existing logic
             string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-            string clientId = $"{ipAddress}:{request.Email}";
+            string clientId = $"{ipAddress}:{loginRequest.Email}";
             
             if (_failedLoginAttempts.TryGetValue(clientId, out var attempts))
             {
                 if (attempts.Count >= MAX_FAILED_ATTEMPTS && 
                     DateTime.UtcNow - attempts.LastAttempt < LOCKOUT_DURATION)
                 {
-                    _logger.LogWarning($"Account locked due to too many failed attempts: {request.Email} from {ipAddress}");
+                    _logger.LogWarning($"Account locked due to too many failed attempts: {loginRequest.Email} from {ipAddress}");
                     return StatusCode(429, new { message = $"Too many failed login attempts. Please try again after {LOCKOUT_DURATION.TotalMinutes} minutes." });
                 }
                 
@@ -203,29 +362,29 @@ public class UserController : ControllerBase
 
             // Find user by email
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email);
+                .FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
 
             // User not found - use constant time comparison to prevent timing attacks
             if (user == null)
             {
                 RecordFailedLoginAttempt(clientId);
-                _logger.LogWarning($"Login attempt with non-existent email: {request.Email} from {ipAddress}");
+                _logger.LogWarning($"Login attempt with non-existent email: {loginRequest.Email} from {ipAddress}");
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
             // Password verification
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHash))
             {
                 RecordFailedLoginAttempt(clientId);
-                _logger.LogWarning($"Failed login attempt for user: {request.Email} from {ipAddress}");
+                _logger.LogWarning($"Failed login attempt for user: {loginRequest.Email} from {ipAddress}");
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
             // Role filtering (if specified in request)
-            if (!string.IsNullOrWhiteSpace(request.Role) && !user.Role.Equals(request.Role, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(loginRequest.Role) && !user.Role.Equals(loginRequest.Role, StringComparison.OrdinalIgnoreCase))
             {
                 RecordFailedLoginAttempt(clientId);
-                _logger.LogWarning($"Login attempt with incorrect role. User: {request.Email}, Expected: {user.Role}, Requested: {request.Role}, IP: {ipAddress}");
+                _logger.LogWarning($"Login attempt with incorrect role. User: {loginRequest.Email}, Expected: {user.Role}, Requested: {loginRequest.Role}, IP: {ipAddress}");
                 return Unauthorized(new { message = "You do not have access with the specified role" });
             }
 
