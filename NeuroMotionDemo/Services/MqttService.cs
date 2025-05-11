@@ -279,12 +279,12 @@ namespace NeuroMotionDemo.Services
                 var torsopx = float.Parse(data["torso_x_tremor_power"].ToString());
                 var torsopy = float.Parse(data["torso_y_tremor_power"].ToString());
                 var torsopz = float.Parse(data["torso_z_tremor_power"].ToString());
-                var tremorpower = (torsox + torsoy + torsoz) / 3;
+                var tremorpower = (torsopx + torsopy + torsopz) / 3;
 
                 // Map data to parameters
                 command.Parameters.AddWithValue("@UserID", 1);
-                command.Parameters.AddWithValue("@TremorPower", tremorindex);
-                command.Parameters.AddWithValue("@TremorIndex", tremorpower);
+                command.Parameters.AddWithValue("@TremorPower", tremorpower);
+                command.Parameters.AddWithValue("@TremorIndex", tremorindex);
                 command.Parameters.AddWithValue("@CreatedAt", DateTime.UtcNow);
 
                 await command.ExecuteNonQueryAsync();
