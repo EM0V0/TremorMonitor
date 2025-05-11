@@ -321,7 +321,7 @@ const Dashboard: React.FC = () => {
           intervalId = window.setInterval(() => {
             console.log('Interval triggered - fetching sensor data');
             fetchSensorData();
-          }, 10000);
+          }, 3000);
         }
       }, 1000);
     } else {
