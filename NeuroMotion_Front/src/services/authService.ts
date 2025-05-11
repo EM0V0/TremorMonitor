@@ -6,7 +6,7 @@ import { encryptJson } from '../utils/gcmCrypto';
 // Login response interface
 interface AuthResponse {
   token: string;
-  user?: any;
+  user: any;  // Changed to required property to match auth.types.ts
 }
 
 /**
@@ -169,6 +169,54 @@ export const authService = {
       return userString ? JSON.parse(userString) : null;
     } catch {
       return null;
+    }
+  },
+
+  /**
+   * Get current user information (alias for getUser)
+   */
+  getCurrentUser: (): any => {
+    return authService.getUser();
+  },
+
+  /**
+   * Forgot password request
+   */
+  forgotPassword: async (email: string): Promise<void> => {
+    try {
+      // Get encryption key
+      const cryptoKey = await cryptoKeyService.getKey();
+      
+      // Encrypt email data
+      const encryptedData = await encryptJson({ Email: email }, cryptoKey);
+      
+      // Send forgot password request
+      await api.post('/user/forgot-password', encryptedData);
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Reset password with token
+   */
+  resetPassword: async (token: string, newPassword: string): Promise<void> => {
+    try {
+      // Get encryption key
+      const cryptoKey = await cryptoKeyService.getKey();
+      
+      // Encrypt reset password data
+      const encryptedData = await encryptJson({
+        Token: token,
+        Password: newPassword
+      }, cryptoKey);
+      
+      // Send reset password request
+      await api.post('/user/reset-password', encryptedData);
+    } catch (error) {
+      console.error('Reset password error:', error);
+      throw error;
     }
   },
   

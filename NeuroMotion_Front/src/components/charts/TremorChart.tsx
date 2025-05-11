@@ -73,18 +73,45 @@ const TremorChart: React.FC<TremorChartProps> = ({
     
     // If real data is available, use it
     if (data && data.values.length > 0) {
-      // Limit to 10 data points for better visualization
-      const maxPoints = 10;
+      // Allow more data points for better visualization
+      const maxPoints = 50; // Show up to 50 data points
       const step = data.values.length > maxPoints ? Math.floor(data.values.length / maxPoints) : 1;
       const filteredValues: number[] = [];
       const filteredTimestamps: string[] = [];
       
-      // Sample data points at regular intervals
-      for (let i = 0; i < data.values.length; i += step) {
-        if (filteredValues.length < maxPoints) {
-          filteredValues.push(data.values[i]);
-          filteredTimestamps.push(data.timestamps[i]);
+      // Check if all timestamps are the same (edge case with backend data)
+      const allSameTimestamp = data.timestamps.every(t => t === data.timestamps[0]);
+      
+      if (allSameTimestamp) {
+        // Generate synthetic timestamps for better visualization
+        console.log('All timestamps are identical - generating synthetic timestamps');
+        for (let i = 0; i < data.values.length; i += step) {
+          if (filteredValues.length < maxPoints) {
+            filteredValues.push(data.values[i]);
+            // Create synthetic timestamps spaced 1 second apart
+            const now = new Date();
+            const syntheticDate = new Date(now.getTime() - (i * 1000));
+            filteredTimestamps.push(syntheticDate.toLocaleTimeString('en-US', {
+              hour: '2-digit', 
+              minute: '2-digit', 
+              second: '2-digit'
+            }));
+          }
         }
+      } else {
+        // Normal case - sample data points at regular intervals
+        for (let i = 0; i < data.values.length; i += step) {
+          if (filteredValues.length < maxPoints) {
+            filteredValues.push(data.values[i]);
+            filteredTimestamps.push(data.timestamps[i]);
+          }
+        }
+      }
+      
+      // Ensure we have at least 2 points for proper line rendering
+      if (filteredValues.length === 1) {
+        filteredValues.push(filteredValues[0]);
+        filteredTimestamps.push(filteredTimestamps[0] + ' (copy)');
       }
       
       return filteredValues.map((value, index) => {
@@ -262,6 +289,29 @@ const TremorChart: React.FC<TremorChartProps> = ({
 
   // Get x axis values based on active tab
   const getXAxisValues = () => {
+    // If we have actual data, use timestamps from the data
+    if (data && data.values.length > 0) {
+      // Get 6 evenly spaced data points across the dataset for X-axis labels
+      const numLabels = 6;
+      const step = Math.max(1, Math.floor(data.timestamps.length / numLabels));
+      const labels = [];
+      
+      for (let i = 0; i < numLabels; i++) {
+        const idx = Math.min(i * step, data.timestamps.length - 1);
+        if (idx >= 0 && idx < data.timestamps.length) {
+          labels.push(data.timestamps[idx]);
+        }
+      }
+      
+      // Ensure we have reasonable number of labels
+      while (labels.length < numLabels) {
+        labels.push('');
+      }
+      
+      return labels;
+    }
+    
+    // Default mock labels when no data is provided
     switch (activeTab) {
       case 'realtime':
         // For real-time view, show time in seconds from now

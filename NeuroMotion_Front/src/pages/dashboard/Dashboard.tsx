@@ -28,6 +28,10 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('realtime');
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>('PAT-4392'); // Default selection
+  const [useRealData, setUseRealData] = useState(false); // Toggle for real vs mock data
+  
+  // Store last successfully fetched real data to persist it
+  const [lastRealData, setLastRealData] = useState<TimeFormattedData | null>(null);
   
   // Sensor data state
   const [sensorData, setSensorData] = useState<TimeFormattedData>({
@@ -128,6 +132,33 @@ const Dashboard: React.FC = () => {
     // In a real app, this would also fetch detailed patient data from an API
   };
 
+  // Handle data source toggle
+  const toggleDataSource = () => {
+    // Handle special case: trying to switch to real data when there is none
+    if (!useRealData && !lastRealData) {
+      console.log('User attempted to switch to real data, but no real data has been fetched yet.');
+      // Show a user-friendly message
+      setDataSourceInfo({
+        isReal: false,
+        hasData: false,
+        message: 'No real data has been fetched yet. Will attempt to fetch real data.'
+      });
+    }
+    
+    setUseRealData(prev => {
+      const newState = !prev;
+      console.log(`Switching to ${newState ? 'REAL' : 'SIMULATED'} data source`);
+      return newState;
+    });
+  };
+
+  // Sensor data info - whether we're showing real or simulated data
+  const [dataSourceInfo, setDataSourceInfo] = useState({
+    isReal: false,
+    hasData: false,
+    message: ''
+  });
+
   // Calculate tremor metrics based on current data
   const updateTremorMetrics = (data: TimeFormattedData) => {
     if (!data.values || data.values.length === 0) return;
@@ -165,40 +196,147 @@ const Dashboard: React.FC = () => {
   // Fetch sensor data based on active tab
   useEffect(() => {
     const fetchSensorData = async () => {
+      // Prevent multiple fetches in a short time
+      if (isLoadingSensorData) {
+        console.log('Skipping data fetch - previous fetch still in progress');
+        return;
+      }
+      
       setIsLoadingSensorData(true);
       try {
-        // Use enhanced sensorService to get data
-        // For demo purposes, use the mock data generator rather than real API calls
-        const mockData = sensorService.generateMockData(50, activeTab as any);
+        let data;
+        let isRealData = false;
+        let dataSourceMessage = '';
         
-        // Process data according to active tab
-        const formattedData = sensorService.formatChartData(mockData, activeTab as any);
-        setSensorData(formattedData);
+        if (useRealData) {
+          try {
+            // Get real data from the API - always use user ID 1 as specified
+            const userId = 1; // Fixed to user ID 1 as specified
+            console.log(`Fetching real data for user ${userId}, time range: ${activeTab}`);
+            
+            const realData = await sensorService.getRealSensorData(userId, 100);
+            
+            // Add current timestamp for the newest entry if in realtime mode
+            if (activeTab === 'realtime' && realData.length > 0) {
+              // Update the timestamp of the first item to current time
+              realData[0] = {
+                ...realData[0],
+                currentTime: new Date().toISOString()
+              };
+              console.log('Updated newest data point timestamp to current time');
+            }
+            
+            data = sensorService.formatChartData(realData, activeTab as any);
+            
+            // Ensure all values are numbers, not undefined
+            data.values = data.values.map(v => typeof v === 'number' ? v : 0);
+            
+            if (data.values.length > 0) {
+              console.log(`Received ${data.values.length} real data points`);
+              isRealData = true;
+              dataSourceMessage = `Showing real sensor data (${data.values.length} points)`;
+              
+              // Save this successful real data fetch
+              setLastRealData({
+                timestamps: data.timestamps,
+                values: data.values as number[],
+                originalDates: data.originalDates || []
+              });
+            } else {
+              throw new Error('Empty dataset returned from API');
+            }
+          } catch (error) {
+            console.error('Error fetching real data:', error);
+            
+            // Use last real data if available
+            if (lastRealData) {
+              console.log('Using last successfully fetched real data');
+              data = lastRealData;
+              isRealData = true;
+              dataSourceMessage = 'Showing previous real data (latest fetch failed)';
+            } else {
+              // If no previous real data, we can't show anything
+              setDataSourceInfo({
+                isReal: false,
+                hasData: false,
+                message: 'No real data available - please switch to simulated mode'
+              });
+              setIsLoadingSensorData(false);
+              return; // Exit early - don't update the chart
+            }
+          }
+        } else {
+          // Use mock data generator only when in simulation mode
+          const mockData = sensorService.generateMockData(100, activeTab as any);
+          data = sensorService.formatChartData(mockData, activeTab as any);
+          dataSourceMessage = 'Showing simulated data';
+          
+          // Ensure all values are numbers, not undefined
+          data.values = data.values.map(v => typeof v === 'number' ? v : 0);
+        }
         
-        // Update metrics
-        updateTremorMetrics(formattedData);
+        // Update data source info for UI feedback
+        setDataSourceInfo({
+          isReal: isRealData && useRealData,
+          hasData: data.values.length > 0,
+          message: dataSourceMessage
+        });
+        
+        // Safe cast to ensure type compatibility
+        const typeSafeData: TimeFormattedData = {
+          timestamps: data.timestamps,
+          values: data.values as number[],
+          originalDates: data.originalDates || []
+        };
+        
+        setSensorData(typeSafeData);
+        updateTremorMetrics(typeSafeData);
       } catch (error) {
         console.error('Error fetching sensor data:', error);
+        setDataSourceInfo({
+          isReal: false,
+          hasData: false,
+          message: 'Error loading data - please try again'
+        });
       } finally {
         setIsLoadingSensorData(false);
       }
     };
     
-    fetchSensorData();
-    
     // Set up polling interval for real-time data
     let intervalId: number | null = null;
     
+    // Only set up interval if in realtime mode and component is mounted
+    let isMounted = true;
+    
     if (activeTab === 'realtime') {
-      intervalId = window.setInterval(fetchSensorData, 10000); // Poll every 10 seconds for real-time view
+      console.log('Setting up 10-second refresh interval for sensor data');
+      
+      // Initial fetch
+      fetchSensorData();
+      
+      // Then set up interval (with a slight delay to prevent double-fetching)
+      setTimeout(() => {
+        if (isMounted) {
+          intervalId = window.setInterval(() => {
+            console.log('Interval triggered - fetching sensor data');
+            fetchSensorData();
+          }, 10000);
+        }
+      }, 1000);
+    } else {
+      // For non-realtime tabs, fetch once without interval
+      fetchSensorData();
     }
     
     return () => {
+      isMounted = false;
       if (intervalId !== null) {
         clearInterval(intervalId);
+        console.log('Cleaning up sensor data refresh interval');
       }
     };
-  }, [activeTab, selectedPatientId]);
+  }, [activeTab, selectedPatientId, useRealData]); // Remove lastRealData from dependencies
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
@@ -286,11 +424,36 @@ const Dashboard: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between p-4">
               <h3 className="text-lg font-medium text-gray-700 mb-2 md:mb-0">{allPatients.find(p => p.id === selectedPatientId)?.name || 'Patient'}'s Tremor Activity</h3>
               
-              <div className="flex border-b">
-                <Tab id="realtime" label="Real-time" active={activeTab === 'realtime'} onClick={setActiveTab} />
-                <Tab id="hourly" label="Hourly" active={activeTab === 'hourly'} onClick={setActiveTab} />
-                <Tab id="daily" label="Daily" active={activeTab === 'daily'} onClick={setActiveTab} />
-                <Tab id="weekly" label="Weekly" active={activeTab === 'weekly'} onClick={setActiveTab} />
+              <div className="flex items-center space-x-4">
+                <div className="flex border-b">
+                  <Tab id="realtime" label="Real-time" active={activeTab === 'realtime'} onClick={setActiveTab} />
+                  <Tab id="hourly" label="Hourly" active={activeTab === 'hourly'} onClick={setActiveTab} />
+                  <Tab id="daily" label="Daily" active={activeTab === 'daily'} onClick={setActiveTab} />
+                  <Tab id="weekly" label="Weekly" active={activeTab === 'weekly'} onClick={setActiveTab} />
+                </div>
+                
+                <button 
+                  onClick={toggleDataSource}
+                  className={`px-3 py-1 text-xs font-medium rounded-full flex items-center ${
+                    useRealData 
+                      ? (dataSourceInfo.isReal 
+                          ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                          : 'bg-orange-100 text-orange-800 hover:bg-orange-200')
+                      : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                  }`}
+                  title={dataSourceInfo.message}
+                >
+                  <span className={`w-2 h-2 rounded-full mr-1 ${
+                    useRealData 
+                      ? (dataSourceInfo.isReal ? 'bg-green-500' : 'bg-orange-500')
+                      : 'bg-blue-500'
+                  }`}></span>
+                  {useRealData 
+                    ? (dataSourceInfo.isReal 
+                        ? 'Real Data' 
+                        : lastRealData ? 'Previous Real Data' : 'No Real Data')
+                    : 'Simulated Data'}
+                </button>
               </div>
             </div>
           </div>
@@ -326,9 +489,21 @@ const Dashboard: React.FC = () => {
                 <span className="text-sm font-medium text-gray-500">Activity Level</span>
                 <p className="text-lg font-semibold text-gray-800">{tremor.activityLevel}</p>
               </div>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded transition-colors duration-150">
-                View Details
-              </button>
+              <div className="flex items-center space-x-2">
+                <span 
+                  className={`text-xs ${
+                    dataSourceInfo.isReal 
+                      ? 'text-green-600'
+                      : useRealData ? 'text-orange-600' : 'text-blue-600'
+                  }`}
+                  title={dataSourceInfo.message}
+                >
+                  {dataSourceInfo.message}
+                </span>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded transition-colors duration-150">
+                  View Details
+                </button>
+              </div>
             </div>
           </div>
         </div>

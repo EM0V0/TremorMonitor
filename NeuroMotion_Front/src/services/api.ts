@@ -5,7 +5,7 @@ import { throttle } from 'lodash';
 
 // Environment configuration
 const isDev = process.env.NODE_ENV === 'development';
-const isDebugMode = isDev && import.meta.env.VITE_DEBUG_MODE === 'true';
+const isDebugMode = isDev && (import.meta.env.VITE_DEBUG_MODE === 'true' || true); // Force debug mode for troubleshooting
 
 // Base API configuration
 const apiConfig: AxiosRequestConfig = {
@@ -18,11 +18,57 @@ const apiConfig: AxiosRequestConfig = {
   withCredentials: true // Enable sending cookies
 };
 
-// Create API instance
+// Create API instance with enhanced logging
 const apiInstance: AxiosInstance = axios.create(apiConfig);
 
 // Performance tracking for debugging
 const requestTimings: Record<string, number> = {};
+
+// Log complete request details for troubleshooting
+const logFullRequest = (config: any) => {
+  console.group('🔍 API Request Details');
+  console.log('URL:', config.baseURL + config.url);
+  console.log('Method:', config.method?.toUpperCase());
+  console.log('Headers:', config.headers);
+  
+  if (config.params) {
+    console.log('Query Params:', config.params);
+  }
+  
+  if (config.data) {
+    console.log('Request Data:', config.data);
+  }
+  console.groupEnd();
+};
+
+// Log complete response details for troubleshooting
+const logFullResponse = (response: any) => {
+  console.group('✅ API Response Details');
+  console.log('Status:', response.status, response.statusText);
+  console.log('Data:', response.data);
+  console.log('Headers:', response.headers);
+  console.groupEnd();
+};
+
+// Log complete error details for troubleshooting
+const logFullError = (error: AxiosError) => {
+  console.group('❌ API Error Details');
+  console.log('Error Message:', error.message);
+  
+  if (error.response) {
+    console.log('Status:', error.response.status, error.response.statusText);
+    console.log('Response Data:', error.response.data);
+    console.log('Response Headers:', error.response.headers);
+  } else if (error.request) {
+    console.log('Request made but no response received');
+    console.log('Request Details:', error.request);
+  } else {
+    console.log('Error setting up request');
+  }
+  
+  console.log('Error Config:', error.config);
+  console.groupEnd();
+};
 
 // Add request interceptor for authentication and debugging
 apiInstance.interceptors.request.use(
@@ -156,10 +202,14 @@ export const api = {
 
 // Define sensor data interface
 interface SensorData {
-  userID: number;
-  tremorPower: number;
-  tremorIndex: number;
-  currentTime: string;
+  userID?: number;
+  UserID?: number; // Backend may use different casing
+  tremorPower?: number;
+  TremorPower?: number; // Backend may use different casing
+  tremorIndex?: number;
+  TremorIndex?: number; // Backend may use different casing
+  currentTime?: string;
+  CreatedAt?: string; // Backend field name
 }
 
 // Activity level thresholds for tremor data
@@ -170,6 +220,13 @@ const ACTIVITY_THRESHOLDS = {
 
 // Sensor data service for handling sensor-related API calls and data processing
 export const sensorService = {
+  // Cache for sensor data to reduce API calls
+  _cache: {
+    lastFetchTime: 0,
+    cachedData: null as SensorData[] | null,
+    minimumInterval: 10000, // 10 seconds minimum between API calls
+  },
+  
   // Get sensor data for a specific user
   getUserSensorData: (userId: number) => 
     api.get<SensorData[]>(`/sensordata/${userId}`),
@@ -178,25 +235,84 @@ export const sensorService = {
   getSimulatedData: () => 
     api.get<SensorData[]>('/sensordata/simulated'),
   
+  // Get real sensor data from the backend, with proper error handling
+  getRealSensorData: async (userId: number = 1, count: number = 100): Promise<SensorData[]> => {
+    const now = Date.now();
+    const timeSinceLastFetch = now - sensorService._cache.lastFetchTime;
+
+    // If cached data exists and we're within the minimum interval, use cache
+    if (sensorService._cache.cachedData && timeSinceLastFetch < sensorService._cache.minimumInterval) {
+      console.log(`Using cached data (${timeSinceLastFetch}ms since last fetch, minimum interval: ${sensorService._cache.minimumInterval}ms)`);
+      return sensorService._cache.cachedData;
+    }
+    
+    try {
+      // Try to get real sensor data from the API
+      console.log(`Requesting real data from API for user ${userId}, count=${count}`);
+      const data = await api.get<SensorData[]>(`/sensordata/${userId}?count=${count}`);
+      
+      // Check if we got actual data
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        throw new Error("No real data available from backend");
+      }
+      
+      // Update cache
+      sensorService._cache.lastFetchTime = now;
+      sensorService._cache.cachedData = data;
+      
+      console.log(`Successfully received ${data.length} real data points from backend`);
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch real sensor data:', error);
+      // Don't fall back to simulated data, let the caller handle the error
+      throw error;
+    }
+  },
+  
   // Format sensor data for chart display based on time range
   formatChartData: (data: SensorData[], timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
     if (!data || data.length === 0) {
       return { timestamps: [], values: [], originalDates: [] };
     }
     
+    // Convert and normalize backend data format to frontend format
+    const normalizedData = data.map(d => ({
+      userID: d.userID || d.UserID || 1,
+      tremorPower: d.TremorPower || d.tremorPower || 0, // Prioritize TremorPower from backend
+      tremorIndex: d.TremorIndex || d.tremorIndex || 0, // Prioritize TremorIndex from backend
+      currentTime: d.currentTime || d.CreatedAt || new Date().toISOString()
+    }));
+    
     // Sort data by time (newest first)
-    const sortedData = [...data].sort((a, b) => 
+    const sortedData = [...normalizedData].sort((a, b) => 
       new Date(b.currentTime).getTime() - new Date(a.currentTime).getTime()
     );
     
     // Filter data based on time range
     const filteredData = sensorService.filterDataByTimeRange(sortedData, timeRange);
     
-    // Map to chart format
+    // Create safe data - ensure all values are numbers
+    const safeTimestamps = filteredData.map(d => sensorService.formatTimestamp(d.currentTime, timeRange));
+    const safeValues = filteredData.map(d => typeof d.TremorPower === 'number' ? d.TremorPower : 
+                                         (typeof d.tremorPower === 'number' ? d.tremorPower : 0));
+    const safeDates = filteredData.map(d => {
+      try {
+        // Make sure we have a valid date string to parse
+        const dateStr = d.currentTime || '';
+        if (!dateStr) return new Date();
+        
+        const parsedDate = new Date(dateStr);
+        return isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
+      } catch (e) {
+        return new Date(); // Default to current date if invalid
+      }
+    });
+    
+    // Map to chart format with clearer timestamps for readability
     return {
-      timestamps: filteredData.map(d => sensorService.formatTimestamp(d.currentTime, timeRange)),
-      values: filteredData.map(d => d.tremorPower),
-      originalDates: filteredData.map(d => new Date(d.currentTime))
+      timestamps: safeTimestamps,
+      values: safeValues,
+      originalDates: safeDates
     };
   },
   
@@ -218,14 +334,29 @@ export const sensorService = {
       case 'weekly':
         timeLimit = new Date(now.getTime() - 6 * 7 * 24 * 60 * 60 * 1000); // Last 6 weeks
         break;
+      default:
+        timeLimit = new Date(now.getTime() - 60 * 1000); // Default to last minute
     }
     
-    return data.filter(d => new Date(d.currentTime) >= timeLimit);
+    return data.filter(d => {
+      const timeStr = d.currentTime || d.CreatedAt || '';
+      if (!timeStr) return false;
+      
+      try {
+        const itemDate = new Date(timeStr);
+        return !isNaN(itemDate.getTime()) && itemDate >= timeLimit;
+      } catch (e) {
+        return false;
+      }
+    });
   },
   
   // Format timestamp based on time range
-  formatTimestamp: (timestamp: string, timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
+  formatTimestamp: (timestamp: string | undefined, timeRange: 'realtime' | 'hourly' | 'daily' | 'weekly') => {
+    if (!timestamp) return '';
+    
     const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return '';
     
     switch (timeRange) {
       case 'realtime':
@@ -236,6 +367,8 @@ export const sensorService = {
         return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
       case 'weekly':
         return date.toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'});
+      default:
+        return date.toLocaleString();
     }
   },
   
@@ -243,8 +376,10 @@ export const sensorService = {
   calculateChange: (currentValue: number, data: SensorData[]) => {
     if (!data || data.length <= 1) return 0;
     
-    // Calculate average excluding current value
-    const otherValues = data.slice(1).map(d => d.tremorPower);
+    // Calculate average excluding current value using normalized values
+    const otherValues = data.slice(1).map(d => d.TremorPower || d.tremorPower || 0);
+    if (otherValues.length === 0) return 0;
+    
     const average = otherValues.reduce((sum, val) => sum + val, 0) / otherValues.length;
     
     // Calculate percentage difference
@@ -293,6 +428,12 @@ export const sensorService = {
     const oscillationAmplitude = 25; // Increase amplitude for more dramatic peaks
     const oscillationFrequency = 0.5; // Adjust frequency for more natural patterns
     
+    // Create an array of unique timestamps
+    const timestamps = [];
+    for (let i = 0; i < count; i++) {
+      timestamps.push(new Date(now.getTime() - i * timeInterval));
+    }
+    
     for (let i = 0; i < count; i++) {
       // Create more pronounced oscillations with multiple sine waves for complexity
       const primaryOscillation = Math.sin(i * oscillationFrequency) * oscillationAmplitude;
@@ -322,13 +463,13 @@ export const sensorService = {
       }
       
       // Ensure value stays within 0-100 range
-      tremorPower = Math.max(0, Math.min(100, tremorPower));
+      tremorPower = Math.max(10, Math.min(100, tremorPower));
       
       mockData.push({
         userID: 1,
-        tremorPower: tremorPower, 
+        TremorPower: tremorPower, 
         tremorIndex: tremorPower * 10 + Math.random() * 50,
-        currentTime: new Date(now.getTime() - i * timeInterval).toISOString()
+        currentTime: timestamps[i].toISOString()
       });
     }
     
