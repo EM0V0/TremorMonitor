@@ -13,5 +13,5 @@ public class SensorData
     public float TremorIndex { get; set; }
 
     [Required]
-    public DateTime CurrentTime { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

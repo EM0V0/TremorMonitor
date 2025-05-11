@@ -95,7 +95,7 @@ public class SensorDataController : ControllerBase
                 UserID = 1,
                 TremorPower = (float)(random.NextDouble() * 100), 
                 TremorIndex = (float)(random.NextDouble() * 1000),
-                CurrentTime = DateTime.UtcNow.AddSeconds(-i) // Simulate timestamps within the last 50 seconds
+                CreatedAt = DateTime.UtcNow.AddSeconds(-i) // Simulate timestamps within the last 50 seconds
             });
         }
 
