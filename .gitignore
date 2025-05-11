@@ -198,3 +198,4 @@ appsettings.Development.json
 # certificate files
 /certs/*
 
+/NeuroMotionDemo/certs
