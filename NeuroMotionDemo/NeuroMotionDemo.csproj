@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.4" />
     <PackageReference Include="MQTTnet" Version="4.2.1.781" />
+    <PackageReference Include="MySql.Data" Version="9.3.0" />
     <PackageReference Include="Radzen.Blazor" Version="6.5.1" />
     <Content Include="certs\mosquitto-ca.crt">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
