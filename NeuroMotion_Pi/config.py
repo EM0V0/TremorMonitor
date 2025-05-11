@@ -17,44 +17,30 @@ class Config:
         return self._get_default_config()
 
     def _get_default_config(self):
-        """Default configuration for three-sensor Parkinson's tremor detection."""
         return {
             'sensors': [
-                {
-                    'name': 'torso',
-                    'description': 'Back torso sensor',
-                    'type': 'adxl345',
-                    'bus': 1,
-                    'address': 0x53,
-                    'range': 2  # ±2g for maximum sensitivity
-                },
-                {
-                    'name': 'left_hand',
-                    'description': 'Left hand/wrist sensor',
-                    'type': 'adxl345',
-                    'bus': 3,
-                    'address': 0x53,
-                    'range': 2
-                },
-                {
-                    'name': 'right_hand',
-                    'description': 'Right hand/wrist sensor',
-                    'type': 'adxl345',
-                    'bus': 4,
-                    'address': 0x53,
-                    'range': 2
-                }
+                {'name': 'torso',      'type': 'adxl345', 'bus': 1, 'address': 0x53, 'range': 2},
+                {'name': 'left_hand',  'type': 'adxl345', 'bus': 3, 'address': 0x53, 'range': 2},
+                {'name': 'right_hand', 'type': 'adxl345', 'bus': 4, 'address': 0x53, 'range': 2},
             ],
             'processing': {
-                'sampling_rate': 100,  # Hz
-                'window_size': 256,  # samples (2.56 sec @ 100Hz)
-                'filter_cutoff': 12,  # Hz
-                'tremor_band': [3, 6]  # Hz (Parkinson's typical range)
+                'sampling_rate': 100,
+                'window_size': 256,
+                'filter_cutoff': 12,
+                'tremor_band': [3, 6],
             },
             'data_service': {
-                'type': 'console'  # Default: output to console
+                'type': 'mqtt',
+                'mqtt': {
+                    'qos': 0,
+                    'delta_threshold': 0.05,
+                    'decimation_factor': 10,
+                    'summary_window_sec': 3,
+                    'key_metrics_only': True,
+                }
             }
         }
+
 
     def get(self, *keys):
         """Retrieve a nested configuration value."""
