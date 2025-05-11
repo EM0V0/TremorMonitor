@@ -2,15 +2,10 @@
 @rendermode InteractiveServer
 @using System.Text.Json
 @using NeuroMotionDemo.Services
-@using Microsoft.Extensions.Options
-@inject DashboardStateService StateService
-@inject TrendDataService TrendDataService
 @implements IDisposable
-@inject IOptions<MqttConfig> MqttOptions
-@inject MqttService _mqttService
+
 @inject DashboardStateService StateService
-@inject TrendDataService TrendDataService
-@inject IOptions<MqttConfig> MqttOptions
+@inject MqttService _mqttService
 
 <PageTitle>NeuroMotion Dashboard</PageTitle>
 
@@ -18,137 +13,137 @@
 
 <!-- CONNECTION PANEL -->
 <div class="connection-panel mb-3">
-  <div class="form-group mb-2">
-    <label for="brokerIp">MQTT Broker IP:</label>
-    <input id="brokerIp"
-           @bind="BrokerHost"
-           class="form-control" />
-  </div>
+    <div class="form-group mb-2">
+        <label for="brokerIp">MQTT Broker IP:</label>
+        <input id="brokerIp"
+               @bind="BrokerHost"
+               class="form-control" />
+    </div>
 
-  <button class="btn btn-primary me-2"
-          @onclick="ConnectToMqtt"
-          disabled="@(_mqttService.IsConnected)">
-    Connect
-  </button>
+    <button class="btn btn-primary me-2"
+            @onclick="ConnectToMqtt"
+            disabled="@(_mqttService.IsConnected)">
+        Connect
+    </button>
 
-  <button class="btn btn-primary"
-          @onclick="Disconnect"
-          disabled="@(!_mqttService.IsConnected)">
-    Disconnect
-  </button>
+    <button class="btn btn-primary"
+            @onclick="Disconnect"
+            disabled="@(!_mqttService.IsConnected)">
+        Disconnect
+    </button>
 
-  <p class="mt-2">
-    Status:
-    <span class="@( _mqttService.IsConnected ? "text-success" : "text-danger" )">
-      @(_mqttService.IsConnected ? "Connected" : "Disconnected")
-    </span>
-  </p>
+    <p class="mt-2">
+        Status:
+        <span class="@( _mqttService.IsConnected ? "text-success" : "text-danger" )">
+            @(_mqttService.IsConnected ? "Connected" : "Disconnected")
+        </span>
+    </p>
 </div>
 
-<!-- NAVIGATE TO TRENDS -->
-<div class="row mb-4">
-  <div class="col">
-    <a href="/trends" class="btn btn-success">
-      <i class="oi oi-graph"></i> View Trend Graphs
-    </a>
-  </div>
-</div>
 
 <!-- DEBUG PANEL -->
 <div class="debug-panel mb-4">
-  <h4>Debug Information</h4>
-  <p>Connection status: @(_mqttService.IsConnected ? "Connected" : "Not Connected")</p>
-  <p>Sensors in StateService: @(StateService.SensorData?.Count ?? 0)</p>
-  <p>Last message received: @_lastMessageTime</p>
-  <button class="btn btn-secondary"
-          @onclick="ConnectToMqtt"
-          disabled="@(_mqttService.IsConnected)">
-    Reconnect
-  </button>
+    <h4>Debug Information</h4>
+    <p>Connection status: @(_mqttService.IsConnected ? "Connected" : "Not Connected")</p>
+    <p>Devices in StateService: @(StateService.SensorData?.Count ?? 0)</p>
+    <p>Last message received: @_lastMessageTime</p>
+    <button class="btn btn-secondary"
+            @onclick="ConnectToMqtt"
+            disabled="@(_mqttService.IsConnected)">
+        Reconnect
+    </button>
 </div>
 
 <!-- RAW JSON DUMP -->
 <div class="raw-data mb-4">
-  <h4>Raw Data (Debug)</h4>
-  <pre style="background-color:#f8f9fa; padding:10px; overflow:auto; max-height:200px;">
-@_rawJsonData
+    <h4>Raw Data (Debug)</h4>
+    <pre style="background-color:#f8f9fa; padding:10px; overflow:auto; max-height:200px;">
+        @_rawJsonData
   </pre>
 </div>
 
 <!-- SENSOR CARDS -->
 @if (StateService.SensorData?.Count > 0)
 {
-  <div class="dashboard-grid">
-    @foreach (var sensor in StateService.SensorData)
-    {
-      <!-- your existing rendering logic… -->
-    }
-  </div>
+    <div class="dashboard-grid">
+        @* …existing sensor rendering here… *@
+    </div>
 }
 else
 {
-  <p>Waiting for sensor data...</p>
+    <p>Waiting for sensor data...</p>
 }
 
 @code {
-  private string BrokerHost { get; set; } = "darkside.tail3c652f.ts.net";
-  private string _lastMessageTime = "None";
-  private string _rawJsonData = "No data received";
+    private string BrokerHost { get; set; } = "darkside.tail3c652f.ts.net";
+    private string _lastMessageTime = "None";
+    private string _rawJsonData = "No data received";
 
-  protected override void OnInitialized()
-  {
-    StateService.OnDataUpdate += OnDataUpdate;
+    // throttle state
+    private int _badIpCount;
+    private DateTime _firstBadAttempt;
 
-    // If the service was already connected before we navigated here,
-    // wire up the handler and set our initial status.
-    if (_mqttService.IsConnected)
+    protected override void OnInitialized()
     {
-      _mqttService.DataReceived += OnDataReceived;
-      _lastMessageTime = DateTime.Now.ToString("HH:mm:ss");
-    }
-  }
+        StateService.OnDataUpdate += OnDataUpdate;
 
-  private async Task ConnectToMqtt()
-  {
-    try
+        if (_mqttService.IsConnected)
+        {
+            _mqttService.DataReceived += OnDataReceived;
+            _lastMessageTime = DateTime.Now.ToString("HH:mm:ss");
+        }
+    }
+
+    private async Task ConnectToMqtt()
     {
-      // Prevent duplicate handlers
-      _mqttService.DataReceived -= OnDataReceived;
+        // simple lockout after 3 bad tries
+        if (_badIpCount >= 3 && DateTime.Now < _firstBadAttempt.AddSeconds(30))
+        {
+            Console.WriteLine("Too many bad IP tries; wait 30s.");
+            return;
+        }
 
-      await _mqttService.ConnectAsync(BrokerHost, 8883);
-      _mqttService.DataReceived += OnDataReceived;
+        try
+        {
+            _mqttService.DataReceived -= OnDataReceived;
+            await _mqttService.ConnectAsync(BrokerHost, 8883);
+            _mqttService.DataReceived += OnDataReceived;
+            _badIpCount = 0;  // reset on success
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Connect failed: {ex.Message}");
+            if (_badIpCount == 0) _firstBadAttempt = DateTime.Now;
+            _badIpCount++;
+        }
+
+        await InvokeAsync(StateHasChanged);
     }
-    catch (Exception ex)
+
+    private async Task Disconnect()
     {
-      Console.WriteLine($"Failed to connect: {ex.Message}");
+        await _mqttService.DisconnectAsync();
+        await InvokeAsync(StateHasChanged);
     }
-    await InvokeAsync(StateHasChanged);
-  }
 
-  private async Task Disconnect()
-  {
-    await _mqttService.DisconnectAsync();
-    await InvokeAsync(StateHasChanged);
-  }
+    private void OnDataReceived(object? sender, SensorDataEventArgs e)
+    {
+        _lastMessageTime = DateTime.Now.ToString("HH:mm:ss");
+        _rawJsonData = JsonSerializer.Serialize(e.Data, new JsonSerializerOptions { WriteIndented = true });
 
-  private void OnDataReceived(object? sender, SensorDataEventArgs e)
-  {
-    _lastMessageTime = DateTime.Now.ToString("HH:mm:ss");
-    _rawJsonData = JsonSerializer.Serialize(e.Data, new JsonSerializerOptions { WriteIndented = true });
-    StateService.UpdateSensorData(e.Topic, e.Data);
-    TrendDataService.ProcessMqttData(e.Data, e.Topic.Split('/').Last());
-    InvokeAsync(StateHasChanged);
-  }
+        StateService.UpdateSensorData(e.Topic, e.Data);
 
-  private async void OnDataUpdate()
-  {
-    await InvokeAsync(StateHasChanged);
-  }
+        InvokeAsync(StateHasChanged);
+    }
 
-  public void Dispose()
-  {
-    StateService.OnDataUpdate -= OnDataUpdate;
-    _mqttService.DataReceived -= OnDataReceived;
-  }
+    private async void OnDataUpdate()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        StateService.OnDataUpdate -= OnDataUpdate;
+        _mqttService.DataReceived -= OnDataReceived;
+    }
 }
-
