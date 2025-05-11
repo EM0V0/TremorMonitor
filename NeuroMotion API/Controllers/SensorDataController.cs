@@ -49,6 +49,7 @@ public class SensorDataController : ControllerBase
         try
         {
             var sensorData = await _context.SensorData
+                .AsNoTracking()
                 .Where(sd => sd.UserID == userId)
                 .OrderByDescending(sd => sd.CreatedAt)
                 .Take(count)
