@@ -20,7 +20,6 @@ builder.Services
 // Register our custom services
 builder.Services.AddSingleton<DashboardStateService>();
 builder.Services.AddSingleton<MqttService>();
-builder.Services.AddSingleton<TrendDataService>();
 
 // Add Radzen services
 builder.Services.AddRadzenComponents();
