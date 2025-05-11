@@ -12,16 +12,20 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
 using NeuroMotionDemo.Models;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace NeuroMotionDemo.Services
 {
     public class MqttService : IDisposable
     {
         private readonly MqttConfig _config;
+        private readonly string _rdsConnectionString;
         private IMqttClient? _mqttClient;
         private bool _disposed;
         private string _brokerHost = "";
         private int _brokerPort = 8883;
+
 
         // Persist subscribers for reconnect
         private readonly List<EventHandler<SensorDataEventArgs>> _subscribers = new();
@@ -47,6 +51,10 @@ namespace NeuroMotionDemo.Services
         public MqttService(IOptions<MqttConfig> config)
         {
             _config = config.Value;
+
+            _rdsConnectionString = "server=darkside-0.cfe6qu6mkp7w.us-east-2.rds.amazonaws.com;port=3306;user=admin;password=YpbATp9vLstRgwuS5oA0;database=neuromotion;CharSet=utf8mb4;";
+
+
         }
 
         /// <summary>
@@ -186,11 +194,15 @@ namespace NeuroMotionDemo.Services
                 );
 
                 if (data != null)
+                {
                     _dataReceived?.Invoke(this, new SensorDataEventArgs
                     {
                         Topic = e.ApplicationMessage.Topic,
                         Data = data
                     });
+
+                    SendDataToRdsAsync(data);
+                }                    
             }
             catch (Exception ex)
             {
@@ -198,6 +210,38 @@ namespace NeuroMotionDemo.Services
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Sends parsed MQTT data to the RDS database
+        /// </summary>
+        private async Task SendDataToRdsAsync(Dictionary<string, object> data)
+        {
+            try
+            {
+                using var connection = new MySqlConnection(_rdsConnectionString);
+                await connection.OpenAsync();
+
+                // Example: Insert data into a table named "SensorData"
+                var query = @"
+                        INSERT INTO SensorData (UserID, TremorPower, TremorIndex, CurrentTime)
+                        VALUES (@UserID, @TremorPower, @TremorIndex, @CurrentTime)";
+
+                using var command = new MySqlCommand(query, connection);
+
+                // Map data to parameters
+                command.Parameters.AddWithValue("@UserID", data["UserID"]);
+                command.Parameters.AddWithValue("@TremorPower", data["TremorPower"]);
+                command.Parameters.AddWithValue("@TremorIndex", data["TremorIndex"]);
+                command.Parameters.AddWithValue("@CurrentTime", DateTime.UtcNow);
+
+                await command.ExecuteNonQueryAsync();
+                Console.WriteLine("Data successfully inserted into RDS.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending data to RDS: {ex.Message}");
+            }
         }
 
         public void Dispose()
