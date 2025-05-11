@@ -218,24 +218,53 @@ namespace NeuroMotionDemo.Services
         private async Task SendDataToRdsAsync(Dictionary<string, object> data)
         {
             try
-            {
+            {                
                 using var connection = new MySqlConnection(_rdsConnectionString);
                 await connection.OpenAsync();
+                
+
+                string buildquery = @"
+                    CREATE TABLE IF NOT EXISTS SensorData (
+                        UserID      INT          NOT NULL,
+                        TremorPower FLOAT          NOT NULL,
+                        TremorIndex FLOAT          NOT NULL,
+                        CreatedAt   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    ) ENGINE=InnoDB;
+                    ";
+
+                using var buildcommand = new MySqlCommand(buildquery, connection);
+                buildcommand.ExecuteNonQuery();
+
 
                 // Example: Insert data into a table named "SensorData"
                 var query = @"
-                        INSERT INTO SensorData (UserID, TremorPower, TremorIndex, CurrentTime)
-                        VALUES (@UserID, @TremorPower, @TremorIndex, @CurrentTime)";
+                        INSERT INTO SensorData (UserID, TremorPower, TremorIndex, CreatedAt)
+                        VALUES (@UserID, @TremorPower, @TremorIndex, @CreatedAt)";
 
                 using var command = new MySqlCommand(query, connection);
 
+                // now you can index into it
+                // var tremorPower = JsonSerializer.Deserialize<Dictionary<string, object>>(data["features"].).Dictionary["tremor_power"];
+
+                var torsox = float.Parse(data["torso_x_tremor_index"].ToString());
+                var torsoy = float.Parse(data["torso_y_tremor_index"].ToString());
+                var torsoz = float.Parse(data["torso_z_tremor_index"].ToString());
+                float tremorindex = (torsox + torsoy + torsoz)/3;
+
+                var torsopx = float.Parse(data["torso_x_tremor_power"].ToString());
+                var torsopy = float.Parse(data["torso_y_tremor_power"].ToString());
+                var torsopz = float.Parse(data["torso_z_tremor_power"].ToString());
+                var tremorpower = (torsox + torsoy + torsoz) / 3;
+
                 // Map data to parameters
-                command.Parameters.AddWithValue("@UserID", data["UserID"]);
-                command.Parameters.AddWithValue("@TremorPower", data["TremorPower"]);
-                command.Parameters.AddWithValue("@TremorIndex", data["TremorIndex"]);
-                command.Parameters.AddWithValue("@CurrentTime", DateTime.UtcNow);
+                command.Parameters.AddWithValue("@UserID", 1);
+                command.Parameters.AddWithValue("@TremorPower", tremorindex);
+                command.Parameters.AddWithValue("@TremorIndex", tremorpower);
+                command.Parameters.AddWithValue("@CreatedAt", DateTime.UtcNow);
 
                 await command.ExecuteNonQueryAsync();
+                connection.Close();
+                await Task.Delay(1000); // 1 second
                 Console.WriteLine("Data successfully inserted into RDS.");
             }
             catch (Exception ex)
