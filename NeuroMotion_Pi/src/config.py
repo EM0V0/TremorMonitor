@@ -32,7 +32,14 @@ class Config:
                 'tremor_band': [3, 6]  # Hz (Parkinson's typical range)
             },
             'data_service': {
-                'type': 'console'  # Default: output to console
+                'type': 'mqtt',
+                'mqtt': {
+                    'qos': 0,                       # QoS 0 for minimal broker overhead
+                    'delta_threshold': 0.05,        # 5% dead‐band
+                    'decimation_factor': 10,        # publish 1/10th of raw samples
+                    'summary_window_sec': 3,        # batch into 3 s windows
+                    'key_metrics_only': True        # drop raw axes, send only RMS & tremor_index
+                }
             }
         }
 

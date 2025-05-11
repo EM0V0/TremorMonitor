@@ -46,6 +46,8 @@ class MQTTDataService(DataService):
             print(f"Client Cert: {'Set' if self.client_cert else 'MISSING'}")
             print(f"Client Key: {'Set' if self.client_key else 'MISSING'}")
 
+        self._last_pub_time = 0.0
+
     def initialize(self):
         """Initialize MQTT client and connect to broker securely"""
         # Verify certificate files exist
@@ -131,6 +133,10 @@ class MQTTDataService(DataService):
             "device_id": self.client_id,
             "data_version": "1.0"
         })
+        now = time.time()
+        if now - self._last_pub_time < 1.0:
+            return True  # skip until 1 s has passed
+        self._last_pub_time = now
 
         # Extract sensor name
         if "sensor_name" in data:

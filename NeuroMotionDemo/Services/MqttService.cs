@@ -25,6 +25,7 @@ namespace NeuroMotionDemo.Services
         private bool _disposed;
         private string _brokerHost = "";
         private int _brokerPort = 8883;
+        private Func<MqttClientDisconnectedEventArgs, Task>? _reconnectHandler;
 
 
         // Persist subscribers for reconnect
@@ -75,22 +76,46 @@ namespace NeuroMotionDemo.Services
             _brokerHost = brokerHost ?? _config.DefaultBrokerHost;
             _brokerPort = brokerPort ?? _config.DefaultBrokerPort;
 
-            if (_mqttClient == null || !_mqttClient.IsConnected)
+            // Unhook old handler if present
+            if (_mqttClient != null && _reconnectHandler != null)
+                _mqttClient.DisconnectedAsync -= _reconnectHandler;
+
+            // Create new client
+            var factory = new MqttFactory();
+            _mqttClient = factory.CreateMqttClient();
+
+            // Define and hook reconnect
+            _reconnectHandler = async args =>
             {
-                var factory = new MqttFactory();
-                _mqttClient = factory.CreateMqttClient();
+                Console.WriteLine("MQTT disconnected—waiting 5s to reconnect.");
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                await ConnectAsync();
+            };
+            _mqttClient.DisconnectedAsync += _reconnectHandler;
 
-                // auto-reconnect on disconnect
-                _mqttClient.DisconnectedAsync += async _ =>
-                {
-                    Console.WriteLine("MQTT disconnected—waiting 5s to reconnect...");
-                    await Task.Delay(TimeSpan.FromSeconds(5));
-                    await ConnectClientAsync();
-                };
-            }
-
+            // Now do the actual connect+subscribe
             await ConnectClientAsync();
         }
+
+        public async Task DisconnectAsync()
+        {
+            if (_mqttClient?.IsConnected == true)
+            {
+                // remove our auto-reconnect handler
+                if (_reconnectHandler != null)
+                {
+                    _mqttClient.DisconnectedAsync -= _reconnectHandler;
+                    _reconnectHandler = null;
+                }
+
+                await _mqttClient.DisconnectAsync();
+                _mqttClient.Dispose();
+                _mqttClient = null;
+            }
+        }
+
+
+
 
         /// <summary>
         /// Builds TLS options, credentials, subscribes & registers handlers
