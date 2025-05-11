@@ -50,6 +50,8 @@ public class SensorDataController : ControllerBase
         {
             var sensorData = await _context.SensorData
                 .Where(sd => sd.UserID == userId)
+                .OrderByDescending(sd => sd.CreatedAt)
+                .Take(10)
                 .ToListAsync();
 
             if (sensorData == null || !sensorData.Any())
