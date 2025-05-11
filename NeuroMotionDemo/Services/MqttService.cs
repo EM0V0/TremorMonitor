@@ -12,16 +12,20 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
 using NeuroMotionDemo.Models;
+using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace NeuroMotionDemo.Services
 {
     public class MqttService : IDisposable
     {
         private readonly MqttConfig _config;
+        private readonly string _rdsConnectionString;
         private IMqttClient? _mqttClient;
         private bool _disposed;
         private string _brokerHost = "";
         private int _brokerPort = 8883;
+
 
         // Persist subscribers for reconnect
         private readonly List<EventHandler<SensorDataEventArgs>> _subscribers = new();
@@ -47,6 +51,10 @@ namespace NeuroMotionDemo.Services
         public MqttService(IOptions<MqttConfig> config)
         {
             _config = config.Value;
+
+            _rdsConnectionString = "server=darkside-0.cfe6qu6mkp7w.us-east-2.rds.amazonaws.com;port=3306;user=admin;password=YpbATp9vLstRgwuS5oA0;database=neuromotion;CharSet=utf8mb4;";
+
+
         }
 
         /// <summary>
@@ -186,11 +194,15 @@ namespace NeuroMotionDemo.Services
                 );
 
                 if (data != null)
+                {
                     _dataReceived?.Invoke(this, new SensorDataEventArgs
                     {
                         Topic = e.ApplicationMessage.Topic,
                         Data = data
                     });
+
+                    SendDataToRdsAsync(data);
+                }                    
             }
             catch (Exception ex)
             {
@@ -198,6 +210,67 @@ namespace NeuroMotionDemo.Services
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Sends parsed MQTT data to the RDS database
+        /// </summary>
+        private async Task SendDataToRdsAsync(Dictionary<string, object> data)
+        {
+            try
+            {                
+                using var connection = new MySqlConnection(_rdsConnectionString);
+                await connection.OpenAsync();
+                
+
+                string buildquery = @"
+                    CREATE TABLE IF NOT EXISTS SensorData (
+                        UserID      INT          NOT NULL,
+                        TremorPower FLOAT          NOT NULL,
+                        TremorIndex FLOAT          NOT NULL,
+                        CreatedAt   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    ) ENGINE=InnoDB;
+                    ";
+
+                using var buildcommand = new MySqlCommand(buildquery, connection);
+                buildcommand.ExecuteNonQuery();
+
+
+                // Example: Insert data into a table named "SensorData"
+                var query = @"
+                        INSERT INTO SensorData (UserID, TremorPower, TremorIndex, CreatedAt)
+                        VALUES (@UserID, @TremorPower, @TremorIndex, @CreatedAt)";
+
+                using var command = new MySqlCommand(query, connection);
+
+                // now you can index into it
+                // var tremorPower = JsonSerializer.Deserialize<Dictionary<string, object>>(data["features"].).Dictionary["tremor_power"];
+
+                var torsox = float.Parse(data["torso_x_tremor_index"].ToString());
+                var torsoy = float.Parse(data["torso_y_tremor_index"].ToString());
+                var torsoz = float.Parse(data["torso_z_tremor_index"].ToString());
+                float tremorindex = (torsox + torsoy + torsoz)/3;
+
+                var torsopx = float.Parse(data["torso_x_tremor_power"].ToString());
+                var torsopy = float.Parse(data["torso_y_tremor_power"].ToString());
+                var torsopz = float.Parse(data["torso_z_tremor_power"].ToString());
+                var tremorpower = (torsox + torsoy + torsoz) / 3;
+
+                // Map data to parameters
+                command.Parameters.AddWithValue("@UserID", 1);
+                command.Parameters.AddWithValue("@TremorPower", tremorindex);
+                command.Parameters.AddWithValue("@TremorIndex", tremorpower);
+                command.Parameters.AddWithValue("@CreatedAt", DateTime.UtcNow);
+
+                await command.ExecuteNonQueryAsync();
+                connection.Close();
+                await Task.Delay(1000); // 1 second
+                Console.WriteLine("Data successfully inserted into RDS.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending data to RDS: {ex.Message}");
+            }
         }
 
         public void Dispose()
