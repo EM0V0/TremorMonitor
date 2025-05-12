@@ -44,4 +44,5 @@ export interface AuthContextType extends AuthState {
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
+  simulateLogin: (role?: string) => Promise<AuthResponse>;
 } 

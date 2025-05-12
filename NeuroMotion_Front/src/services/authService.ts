@@ -118,6 +118,52 @@ export const authService = {
   },
 
   /**
+   * Simulated login for direct access without backend authentication
+   */
+  simulateLogin: async (role: string = 'doctor'): Promise<AuthResponse> => {
+    // Generate a simulated token (HMAC SHA-256 encoded with random timestamp)
+    const timestamp = Date.now();
+    const expiration = timestamp + 24 * 60 * 60 * 1000; // 24 hours expiration
+    
+    // Create a mock token (JWT format)
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payload = btoa(JSON.stringify({
+      sub: 'simulated-user-1',
+      name: 'Simulated User',
+      role: role,
+      exp: Math.floor(expiration / 1000),
+      iat: Math.floor(timestamp / 1000)
+    }));
+    const signature = btoa('simulated-signature');
+    const token = `${header}.${payload}.${signature}`;
+    
+    // Create a mock user object
+    const user = {
+      id: '1',
+      email: 'simulated@example.com',
+      firstName: 'Simulated',
+      lastName: 'User',
+      name: 'Simulated User',
+      role: role
+    };
+    
+    // Create the response
+    const response: AuthResponse = {
+      token,
+      user
+    };
+    
+    // Store token and user in storage
+    cookieService.setToken(token);
+    sessionStorage.setItem('lastActivity', String(timestamp));
+    sessionStorage.setItem('user', JSON.stringify(user));
+    
+    console.log('Simulated login successful!', { user });
+    
+    return response;
+  },
+
+  /**
    * Registration method with encryption
    */
   register: async (registerData: { name: string, email: string, password: string, role: string }): Promise<any> => {

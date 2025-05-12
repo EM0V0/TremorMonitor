@@ -29,6 +29,7 @@ const defaultAuthContext: AuthContextType = {
   logout: () => {},
   forgotPassword: async () => {},
   resetPassword: async () => {},
+  simulateLogin: async () => mockLoginPromise,
 };
 
 // Create context with proper type
@@ -42,7 +43,7 @@ const TOKEN_REFRESH_THRESHOLD = 7 * 60 * 60 * 1000;
 
 // Provider component that wraps the app and makes auth available to any child component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [authState, setAuthState] = useState<Omit<AuthContextType, 'login' | 'logout' | 'forgotPassword' | 'resetPassword' | 'register'>>({
+  const [authState, setAuthState] = useState<Omit<AuthContextType, 'login' | 'logout' | 'forgotPassword' | 'resetPassword' | 'register' | 'simulateLogin'>>({
     isAuthenticated: false,
     user: null,
     token: null,
@@ -391,6 +392,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  // Add simulated login handler
+  const simulateLogin = async (role: string = 'doctor'): Promise<AuthResponse> => {
+    try {
+      setAuthState(prev => ({ ...prev, loading: true, error: null }));
+      
+      // Call auth service simulate method
+      const response = await authService.simulateLogin(role);
+      
+      // Update auth state with response data
+      setAuthState({
+        isAuthenticated: true,
+        user: response.user,
+        token: response.token,
+        loading: false,
+        error: null,
+      });
+      
+      // Initialize activity tracking
+      authService.updateActivityTimestamp();
+      
+      // Return response for additional handling if needed
+      return response;
+    } catch (error: any) {
+      // Extract error message for more detailed error handling
+      let errorMessage = 'Simulated login failed. Please try again.';
+      
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      // Update auth state with error
+      setAuthState(prev => ({
+        ...prev,
+        isAuthenticated: false,
+        loading: false,
+        error: errorMessage,
+      }));
+      
+      // Re-throw error for component-level handling
+      throw error;
+    }
+  };
+
   // Create value object to be provided to consumers
   const contextValue: AuthContextType = {
     ...authState,
@@ -399,6 +443,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     logout,
     forgotPassword,
     resetPassword,
+    simulateLogin,
   };
 
   return (

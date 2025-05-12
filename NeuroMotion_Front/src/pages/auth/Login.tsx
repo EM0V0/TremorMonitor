@@ -7,7 +7,7 @@ type Role = 'doctor' | 'admin' | 'family';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, simulateLogin } = useAuth();
   
   // Form state
   const [email, setEmail] = useState('');
@@ -124,6 +124,31 @@ const Login: React.FC = () => {
   // Password visibility toggle
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+  
+  // Handle simulated login
+  const handleSimulatedLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      console.log(`Simulating login with role: ${selectedRole}`);
+      
+      // Call simulateLogin from auth context
+      const response = await simulateLogin(selectedRole);
+      
+      // Show success message
+      setDebugInfo(`Simulated login successful! User: ${response.user.name}, Role: ${response.user.role}`);
+      
+      // Navigate to dashboard
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 500);
+    } catch (error: any) {
+      console.error('Simulated login error:', error);
+      setError('Failed to simulate login');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   // Brain Network Illustration with animation
@@ -404,6 +429,16 @@ const Login: React.FC = () => {
               ) : (
                 'Sign in'
               )}
+            </button>
+            
+            {/* Simulated login button */}
+            <button
+              type="button"
+              onClick={handleSimulatedLogin}
+              disabled={isLoading}
+              className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-md shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:-translate-y-0.5"
+            >
+              Simulated Login
             </button>
             
             <div className="text-center mt-4">

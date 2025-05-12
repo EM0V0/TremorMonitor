@@ -100,11 +100,11 @@ const TremorChart: React.FC<TremorChartProps> = ({
         }
       } else {
         // Normal case - sample data points at regular intervals
-        for (let i = 0; i < data.values.length; i += step) {
-          if (filteredValues.length < maxPoints) {
-            filteredValues.push(data.values[i]);
-            filteredTimestamps.push(data.timestamps[i]);
-          }
+      for (let i = 0; i < data.values.length; i += step) {
+        if (filteredValues.length < maxPoints) {
+          filteredValues.push(data.values[i]);
+          filteredTimestamps.push(data.timestamps[i]);
+        }
         }
       }
       
